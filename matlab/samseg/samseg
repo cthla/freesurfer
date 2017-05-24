@@ -28,7 +28,7 @@ endif
 # Matlab (must be 8.0)
 if($?SAMSEG_MCRROOT == 0) then
   # The mkbin script also uses this env var when compiling
-  setenv SAMSEG_MCRROOT /usr/pubsw/common/matlab/8.0
+  setenv SAMSEG_MCRROOT /usr/pubsw/common/matlab/8.4
 endif
 
 # This is for when running matlab 

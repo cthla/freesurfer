@@ -8,11 +8,12 @@ unalias matlab
 # Match the path in samseg script (must be 8.0?)
 if($?SAMSEG_MCRROOT == 0) then
   # The samseg script also uses this env var
-  setenv SAMSEG_MCRROOT /usr/pubsw/common/matlab/8.0
+  setenv SAMSEG_MCRROOT /usr/pubsw/common/matlab/8.4
 endif
 set path = ( $SAMSEG_MCRROOT/bin/ $path )
 
-mcc  -m -v -R -singleCompThread run_samseg
+# only load "standard paths" for compiled matlab programs, so make sure the path is clean and then include here
+mcc  -m -v -R -singleCompThread -I '/autofs/space/sand_001/users/zkaufman/git_repos/freesurfer.test/GEMS2/bin' -I '/usr/pubsw/common/spm/spm8' -I '/usr/local/freesurfer/stable/matlab' run_samseg
 
 rm run_run_samseg.sh mccExcludedFiles.log  readme.txt
 
