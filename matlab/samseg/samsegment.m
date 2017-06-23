@@ -55,7 +55,7 @@ fprintf( '==========================\n\n' );
 kvlSetMaximumNumberOfThreads( nThreads );
 
 % Clean up the Matlab work space
-kvlClear % Clear all the wrapped C++ stuff
+kvlClear % Clear all thec wrapped C++ stuff
 close all
 
 
@@ -230,6 +230,14 @@ sameGaussianParameters{7} = [ 13 52 ]; % Same for pallidum
 numberOfGaussiansPerClass=[3 2 3 3 2 2 2]; 
 %  numberOfGaussiansPerClass=[1 1 1 1 1 1 1]; 
 numberOfClasses = length(numberOfGaussiansPerClass);
+classIndex = zeros(sum(numberOfGaussiansPerClass),1);
+counter = 1;
+for i = 1:numberOfClasses
+    for j = 1:numberOfGaussiansPerClass(i)
+        classIndex(counter) = i-1;
+        counter = counter + 1;
+    end
+end
 
 % Get a Matlab matrix containing a copy of the probability vectors in each mesh node (size numberOfNodes x
 % numberOfLabels ).
@@ -774,16 +782,19 @@ for multiResolutionLevel = 1 : numberOfMultiResolutionLevels
     % Before calling the mesh node position optimizer, which at this stage can only handle Gaussian intensity distributions
     % rather than the Gaussian mixture models we have, let's burst out our small number of classes into a larger number
     % of individual Gaussians
-    optimizerAlphas = zeros( size( reducedAlphas, 1 ), sum( numberOfGaussiansPerClass ), 'single' );
-    shift = 0;
-    for classNumber = 1 : numberOfClasses
-      alpha = smoothedReducedAlphas( :, classNumber );
-      for gaussian = 1 : numberOfGaussiansPerClass( classNumber )
-        optimizerAlphas( :, shift + classNumber + gaussian - 1 ) = EMweights( shift + classNumber + gaussian - 1 ) .* alpha;
-      end
-      shift = shift + numberOfGaussiansPerClass( classNumber ) - 1;
-    end
-    kvlSetAlphasInMeshNodes( mesh, optimizerAlphas );
+    
+    
+    % CTLA disabled while testing optimized likelihood filter in C++ code
+%     optimizerAlphas = zeros( size( reducedAlphas, 1 ), sum( numberOfGaussiansPerClass ), 'single' );
+%     shift = 0;
+%     for classNumber = 1 : numberOfClasses
+%       alpha = smoothedReducedAlphas( :, classNumber );
+%       for gaussian = 1 : numberOfGaussiansPerClass( classNumber )
+%         optimizerAlphas( :, shift + classNumber + gaussian - 1 ) = EMweights( shift + classNumber + gaussian - 1 ) .* alpha;
+%       end
+%       shift = shift + numberOfGaussiansPerClass( classNumber ) - 1;
+%     end
+%     kvlSetAlphasInMeshNodes( mesh, optimizerAlphas );
     
 
     % Create ITK images to pass on to the mesh node position optimizer
@@ -839,7 +850,10 @@ for multiResolutionLevel = 1 : numberOfMultiResolutionLevels
                                                    'Sliding', ...
                                                    transform, ...
                                                    todoMeans, ...
-                                                   precisions );
+                                                   precisions, ...
+                                                   EMweights', ...
+                                                   classIndex, ...
+                                                   numberOfClasses);
 
     %optimizerType = 'ConjugateGradient';
     optimizerType = 'L-BFGS';

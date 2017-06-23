@@ -1,4 +1,4 @@
-function run_samseg(imageFileName1,savePath,nThreadsStr,UseGPUStr,imageFileName2,imageFileName3,imageFileName4,imageFileName5,imageFileName6)
+    function run_samseg(imageFileName1,savePath,nThreadsStr,UseGPUStr,imageFileName2,imageFileName3,imageFileName4,imageFileName5,imageFileName6)
 % This function is a wrapper for running the samseg matlab
 % scripts. This wrapper can be compiled (meaning that all the
 % inputs are strings).
@@ -38,7 +38,7 @@ fprintf('entering registerAtlas\n');
 % Switch on if you want to initialize the registration by matching
 % (translation) the centers  of gravity 
 initializeUsingCenterOfGravityAlignment = false;
-showFigures = true;
+showFigures = false;
 samseg_registerAtlas
 
 
