@@ -51,10 +51,10 @@
 znzFile znzopen(const char *path, const char *mode, int use_compression)
 {
   znzFile file;
-  file = (znzFile) calloc(1,sizeof(struct znzptr));
-  if ( file == NULL )
+  file = (znzFile)calloc(1, sizeof(struct znzptr));
+  if (file == NULL)
   {
-    fprintf(stderr,"** ERROR: znzopen failed to alloc znzptr\n");
+    fprintf(stderr, "** ERROR: znzopen failed to alloc znzptr\n");
     return NULL;
   }
 
@@ -66,7 +66,7 @@ znzFile znzopen(const char *path, const char *mode, int use_compression)
   if (use_compression)
   {
     file->withz = 1;
-    if ((file->zfptr = gzopen(path,mode)) == NULL)
+    if ((file->zfptr = gzopen(path, mode)) == NULL)
     {
       free(file);
       file = NULL;
@@ -77,7 +77,7 @@ znzFile znzopen(const char *path, const char *mode, int use_compression)
 #endif
 
     file->withz = 0;
-    if ((file->nzfptr = fopen(path,mode)) == NULL)
+    if ((file->nzfptr = fopen(path, mode)) == NULL)
     {
       free(file);
       file = NULL;
@@ -90,21 +90,20 @@ znzFile znzopen(const char *path, const char *mode, int use_compression)
   return file;
 }
 
-
 znzFile znzdopen(int fd, const char *mode, int use_compression)
 {
   znzFile file;
-  file = (znzFile) calloc(1,sizeof(struct znzptr));
-  if ( file == NULL )
+  file = (znzFile)calloc(1, sizeof(struct znzptr));
+  if (file == NULL)
   {
-    fprintf(stderr,"** ERROR: znzdopen failed to alloc znzptr\n");
+    fprintf(stderr, "** ERROR: znzdopen failed to alloc znzptr\n");
     return NULL;
   }
 #ifdef HAVE_ZLIB
   if (use_compression)
   {
     file->withz = 1;
-    file->zfptr = gzdopen(fd,mode);
+    file->zfptr = gzdopen(fd, mode);
     file->nzfptr = NULL;
   }
   else
@@ -112,7 +111,7 @@ znzFile znzdopen(int fd, const char *mode, int use_compression)
 #endif
     file->withz = 0;
 #ifdef HAVE_FDOPEN
-    file->nzfptr = fdopen(fd,mode);
+    file->nzfptr = fdopen(fd, mode);
 #endif
 #ifdef HAVE_ZLIB
     file->zfptr = NULL;
@@ -121,19 +120,18 @@ znzFile znzdopen(int fd, const char *mode, int use_compression)
   return file;
 }
 
-
-int Xznzclose(znzFile * file)
+int Xznzclose(znzFile *file)
 {
   int retval = 0;
-  if (*file!=NULL)
+  if (*file != NULL)
   {
 #ifdef HAVE_ZLIB
-    if ((*file)->zfptr!=NULL)
+    if ((*file)->zfptr != NULL)
     {
       retval = gzclose((*file)->zfptr);
     }
 #endif
-    if ((*file)->nzfptr!=NULL)
+    if ((*file)->nzfptr != NULL)
     {
       retval = fclose((*file)->nzfptr);
     }
@@ -144,53 +142,54 @@ int Xznzclose(znzFile * file)
   return retval;
 }
 
-
-size_t znzread(void* buf, size_t size, size_t nmemb, znzFile file)
+size_t znzread(void *buf, size_t size, size_t nmemb, znzFile file)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL)
-    return (size_t) (gzread(file->zfptr,buf,((int) size)*((int) nmemb)) / size);
+  if (file->zfptr != NULL)
+    return (size_t)(gzread(file->zfptr, buf, ((int)size) * ((int)nmemb)) / size);
 #endif
-  return fread(buf,size,nmemb,file->nzfptr);
+  return fread(buf, size, nmemb, file->nzfptr);
 }
 
-size_t znzwrite(void* buf, size_t size, size_t nmemb, znzFile file)
+size_t znzwrite(void *buf, size_t size, size_t nmemb, znzFile file)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL)
-    return (size_t) ( gzwrite(file->zfptr,buf,size*nmemb) / size );
+  if (file->zfptr != NULL)
+    return (size_t)(gzwrite(file->zfptr, buf, size * nmemb) / size);
 #endif
-  return fwrite(buf,size,nmemb,file->nzfptr);
+  return fwrite(buf, size, nmemb, file->nzfptr);
 }
 
 long znzseek(znzFile file, long offset, int whence)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL) return (long) gzseek(file->zfptr,offset,whence);
+  if (file->zfptr != NULL)
+    return (long)gzseek(file->zfptr, offset, whence);
 #endif
-  return fseek(file->nzfptr,offset,whence);
+  return fseek(file->nzfptr, offset, whence);
 }
 
 int znzrewind(znzFile stream)
 {
-  if (stream==NULL)
+  if (stream == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (stream->zfptr!=NULL) return gzrewind(stream->zfptr);
+  if (stream->zfptr != NULL)
+    return gzrewind(stream->zfptr);
 #endif
   rewind(stream->nzfptr);
   return 0;
@@ -198,125 +197,127 @@ int znzrewind(znzFile stream)
 
 long znztell(znzFile file)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL) return (long) gztell(file->zfptr);
+  if (file->zfptr != NULL)
+    return (long)gztell(file->zfptr);
 #endif
   return ftell(file->nzfptr);
 }
 
-int znzputs(char* str, znzFile file)
+int znzputs(char *str, znzFile file)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL) return gzputs(file->zfptr,str);
+  if (file->zfptr != NULL)
+    return gzputs(file->zfptr, str);
 #endif
-  return fputs(str,file->nzfptr);
+  return fputs(str, file->nzfptr);
 }
 
-
-char * znzgets(char* str, int size, znzFile file)
+char *znzgets(char *str, int size, znzFile file)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return NULL;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL) return gzgets(file->zfptr,str,size);
+  if (file->zfptr != NULL)
+    return gzgets(file->zfptr, str, size);
 #endif
-  return fgets(str,size,file->nzfptr);
+  return fgets(str, size, file->nzfptr);
 }
-
 
 int znzflush(znzFile file)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL) return gzflush(file->zfptr,Z_SYNC_FLUSH);
+  if (file->zfptr != NULL)
+    return gzflush(file->zfptr, Z_SYNC_FLUSH);
 #endif
   return fflush(file->nzfptr);
 }
 
-
 int znzeof(znzFile file)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL) return gzeof(file->zfptr);
+  if (file->zfptr != NULL)
+    return gzeof(file->zfptr);
 #endif
   return feof(file->nzfptr);
 }
 
-
 int znzputc(int c, znzFile file)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL) return gzputc(file->zfptr,c);
+  if (file->zfptr != NULL)
+    return gzputc(file->zfptr, c);
 #endif
-  return fputc(c,file->nzfptr);
+  return fputc(c, file->nzfptr);
 }
-
 
 int znzgetc(znzFile file)
 {
-  if (file==NULL)
+  if (file == NULL)
   {
     return 0;
   }
 #ifdef HAVE_ZLIB
-  if (file->zfptr!=NULL) return gzgetc(file->zfptr);
+  if (file->zfptr != NULL)
+    return gzgetc(file->zfptr);
 #endif
   return fgetc(file->nzfptr);
 }
 
-#if !defined (WIN32)
+#if !defined(WIN32)
 int znzprintf(znzFile stream, const char *format, ...)
 {
-  int retval=0;
+  int retval = 0;
 #ifdef HAVE_ZLIB
-  char *tmpstr=NULL;
+  char *tmpstr = NULL;
 #endif
   va_list va;
-  if (stream==NULL)
+  if (stream == NULL)
   {
     return 0;
   }
   va_start(va, format);
 #ifdef HAVE_ZLIB
-  if (stream->zfptr!=NULL)
+  if (stream->zfptr != NULL)
   {
-    int size;  /* local to HAVE_ZLIB block */
-    size = strlen(format) + 1000000;  /* overkill I hope */
+    int size;                        /* local to HAVE_ZLIB block */
+    size = strlen(format) + 1000000; /* overkill I hope */
     tmpstr = (char *)calloc(1, size);
-    if ( tmpstr == NULL )
+    if (tmpstr == NULL)
     {
-      fprintf(stderr,"** ERROR: znzprintf failed to alloc %d bytes\n", size);
+      fprintf(stderr, "** ERROR: znzprintf failed to alloc %d bytes\n", size);
       return retval;
     }
-    vsprintf(tmpstr,format,va);
-    retval=gzprintf(stream->zfptr,"%s",tmpstr);
+    vsprintf(tmpstr, format, va);
+    retval = gzprintf(stream->zfptr, "%s", tmpstr);
     free(tmpstr);
   }
   else
 #endif
   {
-    retval=vfprintf(stream->nzfptr,format,va);
+    retval = vfprintf(stream->nzfptr, format, va);
   }
   va_end(va);
   return retval;

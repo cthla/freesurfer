@@ -5,7 +5,7 @@
  * REPLACE_WITH_LONG_DESCRIPTION_OR_REFERENCE
  */
 /*
- * Original Author: REPLACE_WITH_FULL_NAME_OF_CREATING_AUTHOR 
+ * Original Author: REPLACE_WITH_FULL_NAME_OF_CREATING_AUTHOR
  * CVS Revision Info:
  *    $Author: nicks $
  *    $Date: 2011/03/02 00:04:09 $
@@ -23,14 +23,15 @@
  *
  */
 
-
 //
 // AFNI.h
 //
 // define afni header structure
 
-typedef struct
-{
+#ifndef AFNI_h
+#define AFNI_h
+
+typedef struct {
   // mandatory attributes
   int dataset_rank[2];
   int dataset_dimensions[3];
@@ -49,12 +50,13 @@ typedef struct
   int numtypes;
   float *brick_float_facs;
   int numfacs;
-}
-AFNI_HEADER, AF;
+} AFNI_HEADER, AF;
 
 MRI *afniRead(const char *fname, int read_volume);
-int afniWrite(MRI *mri,const char *fname);
+int afniWrite(MRI *mri, const char *fname);
 int readAFNIHeader(FILE *fp, AF *paf);
 void AFinit(AF *pAF);
 void AFclean(AF *pAF);
 void printAFNIHeader(AF *pAF);
+
+#endif

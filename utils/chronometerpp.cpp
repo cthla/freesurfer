@@ -28,21 +28,16 @@
 #include "chronometer.hpp"
 
 namespace SciGPU {
-  namespace Utilities {
+namespace Utilities {
 
-std::ostream& operator<<( std::ostream& os,
-			  const SciGPU::Utilities::Chronometer& timer ) {
-  
-  os << std::setw(9)
-     << std::setprecision(6)
-     << timer.GetAverageTime() << " ms (avg) ";
+  std::ostream &operator<<(std::ostream &os, const SciGPU::Utilities::Chronometer &timer)
+  {
 
-  os << std::setw(9)
-     << std::setprecision(6)
-     << timer.GetTime() << " ms (tot)";
+    os << std::setw(9) << std::setprecision(6) << timer.GetAverageTime() << " ms (avg) ";
 
-  return( os );
-}
+    os << std::setw(9) << std::setprecision(6) << timer.GetTime() << " ms (tot)";
 
+    return (os);
   }
+}
 }

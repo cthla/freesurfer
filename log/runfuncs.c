@@ -5,7 +5,7 @@
  * REPLACE_WITH_LONG_DESCRIPTION_OR_REFERENCE
  */
 /*
- * Original Author: REPLACE_WITH_FULL_NAME_OF_CREATING_AUTHOR 
+ * Original Author: REPLACE_WITH_FULL_NAME_OF_CREATING_AUTHOR
  * CVS Revision Info:
  *    $Author: nicks $
  *    $Date: 2011/03/02 00:04:12 $
@@ -23,7 +23,6 @@
  *
  */
 
-
 /*
   @(#)runfuncs.c  1.1
   4/4/94
@@ -39,9 +38,8 @@
 
 ------------------------------------------------------------------------*/
 
-
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
 
 #include "runfuncs.h"
 
@@ -52,7 +50,6 @@
 /*------------------------------------------------------------------------
                             STRUCTURES
 ------------------------------------------------------------------------*/
-
 
 /*------------------------------------------------------------------------
                             GLOBAL DATA
@@ -66,39 +63,39 @@
                             STATIC PROTOTYPES
 ------------------------------------------------------------------------*/
 
-static int runsum_1(unsigned char **outPtr) ;
-static int runsum_2(unsigned char **outPtr) ;
-static int runsum_3(unsigned char **outPtr) ;
-static int runsum_3(unsigned char **outPtr) ;
-static int runsum_4(unsigned char **outPtr) ;
-static int runsum_5(unsigned char **outPtr) ;
-static int runsum_6(unsigned char **outPtr) ;
-static int runsum_7(unsigned char **outPtr) ;
-static int runsum_8(unsigned char **outPtr) ;
-static int runsum_9(unsigned char **outPtr) ;
-static int runsum_10(unsigned char **outPtr) ;
-static int runsum_11(unsigned char **outPtr) ;
-static int runsum_12(unsigned char **outPtr) ;
-static int runsum_13(unsigned char **outPtr) ;
-static int runsum_14(unsigned char **outPtr) ;
-static int runsum_15(unsigned char **outPtr) ;
-static int runsum_16(unsigned char **outPtr) ;
-static int runsum_17(unsigned char **outPtr) ;
-static int runsum_18(unsigned char **outPtr) ;
-static int runsum_19(unsigned char **outPtr) ;
-static int runsum_20(unsigned char **outPtr) ;
-static int runsum_21(unsigned char **outPtr) ;
-static int runsum_22(unsigned char **outPtr) ;
-static int runsum_23(unsigned char **outPtr) ;
-static int runsum_24(unsigned char **outPtr) ;
-static int runsum_25(unsigned char **outPtr) ;
-static int runsum_26(unsigned char **outPtr) ;
-static int runsum_27(unsigned char **outPtr) ;
-static int runsum_28(unsigned char **outPtr) ;
-static int runsum_29(unsigned char **outPtr) ;
-static int runsum_30(unsigned char **outPtr) ;
-static int runsum_31(unsigned char **outPtr) ;
-static int runsum_32(unsigned char **outPtr) ;
+static int runsum_1(unsigned char **outPtr);
+static int runsum_2(unsigned char **outPtr);
+static int runsum_3(unsigned char **outPtr);
+static int runsum_3(unsigned char **outPtr);
+static int runsum_4(unsigned char **outPtr);
+static int runsum_5(unsigned char **outPtr);
+static int runsum_6(unsigned char **outPtr);
+static int runsum_7(unsigned char **outPtr);
+static int runsum_8(unsigned char **outPtr);
+static int runsum_9(unsigned char **outPtr);
+static int runsum_10(unsigned char **outPtr);
+static int runsum_11(unsigned char **outPtr);
+static int runsum_12(unsigned char **outPtr);
+static int runsum_13(unsigned char **outPtr);
+static int runsum_14(unsigned char **outPtr);
+static int runsum_15(unsigned char **outPtr);
+static int runsum_16(unsigned char **outPtr);
+static int runsum_17(unsigned char **outPtr);
+static int runsum_18(unsigned char **outPtr);
+static int runsum_19(unsigned char **outPtr);
+static int runsum_20(unsigned char **outPtr);
+static int runsum_21(unsigned char **outPtr);
+static int runsum_22(unsigned char **outPtr);
+static int runsum_23(unsigned char **outPtr);
+static int runsum_24(unsigned char **outPtr);
+static int runsum_25(unsigned char **outPtr);
+static int runsum_26(unsigned char **outPtr);
+static int runsum_27(unsigned char **outPtr);
+static int runsum_28(unsigned char **outPtr);
+static int runsum_29(unsigned char **outPtr);
+static int runsum_30(unsigned char **outPtr);
+static int runsum_31(unsigned char **outPtr);
+static int runsum_32(unsigned char **outPtr);
 #if 0
 static int runsum_33(unsigned char **outPtr) ;
 static int runsum_34(unsigned char **outPtr) ;
@@ -107,39 +104,39 @@ static int runsum_36(unsigned char **outPtr) ;
 static int runsum_37(unsigned char **outPtr) ;
 #endif
 
-static void runput_1(unsigned char **outPtr, unsigned char val) ;
-static void runput_2(unsigned char **outPtr, unsigned char val) ;
-static void runput_3(unsigned char **outPtr, unsigned char val) ;
-static void runput_3(unsigned char **outPtr, unsigned char val) ;
-static void runput_4(unsigned char **outPtr, unsigned char val) ;
-static void runput_5(unsigned char **outPtr, unsigned char val) ;
-static void runput_6(unsigned char **outPtr, unsigned char val) ;
-static void runput_7(unsigned char **outPtr, unsigned char val) ;
-static void runput_8(unsigned char **outPtr, unsigned char val) ;
-static void runput_9(unsigned char **outPtr, unsigned char val) ;
-static void runput_10(unsigned char **outPtr, unsigned char val) ;
-static void runput_11(unsigned char **outPtr, unsigned char val) ;
-static void runput_12(unsigned char **outPtr, unsigned char val) ;
-static void runput_13(unsigned char **outPtr, unsigned char val) ;
-static void runput_14(unsigned char **outPtr, unsigned char val) ;
-static void runput_15(unsigned char **outPtr, unsigned char val) ;
-static void runput_16(unsigned char **outPtr, unsigned char val) ;
-static void runput_17(unsigned char **outPtr, unsigned char val) ;
-static void runput_18(unsigned char **outPtr, unsigned char val) ;
-static void runput_19(unsigned char **outPtr, unsigned char val) ;
-static void runput_20(unsigned char **outPtr, unsigned char val) ;
-static void runput_21(unsigned char **outPtr, unsigned char val) ;
-static void runput_22(unsigned char **outPtr, unsigned char val) ;
-static void runput_23(unsigned char **outPtr, unsigned char val) ;
-static void runput_24(unsigned char **outPtr, unsigned char val) ;
-static void runput_25(unsigned char **outPtr, unsigned char val) ;
-static void runput_26(unsigned char **outPtr, unsigned char val) ;
-static void runput_27(unsigned char **outPtr, unsigned char val) ;
-static void runput_28(unsigned char **outPtr, unsigned char val) ;
-static void runput_29(unsigned char **outPtr, unsigned char val) ;
-static void runput_30(unsigned char **outPtr, unsigned char val) ;
-static void runput_31(unsigned char **outPtr, unsigned char val) ;
-static void runput_32(unsigned char **outPtr, unsigned char val) ;
+static void runput_1(unsigned char **outPtr, unsigned char val);
+static void runput_2(unsigned char **outPtr, unsigned char val);
+static void runput_3(unsigned char **outPtr, unsigned char val);
+static void runput_3(unsigned char **outPtr, unsigned char val);
+static void runput_4(unsigned char **outPtr, unsigned char val);
+static void runput_5(unsigned char **outPtr, unsigned char val);
+static void runput_6(unsigned char **outPtr, unsigned char val);
+static void runput_7(unsigned char **outPtr, unsigned char val);
+static void runput_8(unsigned char **outPtr, unsigned char val);
+static void runput_9(unsigned char **outPtr, unsigned char val);
+static void runput_10(unsigned char **outPtr, unsigned char val);
+static void runput_11(unsigned char **outPtr, unsigned char val);
+static void runput_12(unsigned char **outPtr, unsigned char val);
+static void runput_13(unsigned char **outPtr, unsigned char val);
+static void runput_14(unsigned char **outPtr, unsigned char val);
+static void runput_15(unsigned char **outPtr, unsigned char val);
+static void runput_16(unsigned char **outPtr, unsigned char val);
+static void runput_17(unsigned char **outPtr, unsigned char val);
+static void runput_18(unsigned char **outPtr, unsigned char val);
+static void runput_19(unsigned char **outPtr, unsigned char val);
+static void runput_20(unsigned char **outPtr, unsigned char val);
+static void runput_21(unsigned char **outPtr, unsigned char val);
+static void runput_22(unsigned char **outPtr, unsigned char val);
+static void runput_23(unsigned char **outPtr, unsigned char val);
+static void runput_24(unsigned char **outPtr, unsigned char val);
+static void runput_25(unsigned char **outPtr, unsigned char val);
+static void runput_26(unsigned char **outPtr, unsigned char val);
+static void runput_27(unsigned char **outPtr, unsigned char val);
+static void runput_28(unsigned char **outPtr, unsigned char val);
+static void runput_29(unsigned char **outPtr, unsigned char val);
+static void runput_30(unsigned char **outPtr, unsigned char val);
+static void runput_31(unsigned char **outPtr, unsigned char val);
+static void runput_32(unsigned char **outPtr, unsigned char val);
 #if 0
 static void runput_33(unsigned char **outPtr, unsigned char val) ;
 static void runput_34(unsigned char **outPtr, unsigned char val) ;
@@ -152,7 +149,6 @@ static void runput_37(unsigned char **outPtr, unsigned char val) ;
                              FUNCTIONS
 ------------------------------------------------------------------------*/
 
-
 /*------------------------------------------------------------------------
        Parameters:
 
@@ -162,8 +158,8 @@ static void runput_37(unsigned char **outPtr, unsigned char val) ;
           0 on success, < 0 otherwise.
 
 ------------------------------------------------------------------------*/
-void
-runFuncInit(fwd_func *fwd_array, inv_func *inv_array) {
+void runFuncInit(fwd_func *fwd_array, inv_func *inv_array)
+{
   fwd_array[1] = runsum_1;
   fwd_array[2] = runsum_2;
   fwd_array[3] = runsum_3;
@@ -299,8 +295,8 @@ runFuncInit(fwd_func *fwd_array, inv_func *inv_array) {
 #endif
 }
 
-int
-runsum_1(unsigned char **inPtr) {
+int runsum_1(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
 
@@ -308,11 +304,11 @@ runsum_1(unsigned char **inPtr) {
   ptr = *inPtr;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int
-runsum_2(unsigned char **inPtr) {
+static int runsum_2(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -320,10 +316,11 @@ runsum_2(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_3(unsigned char **inPtr) {
+static int runsum_3(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -332,10 +329,11 @@ static int runsum_3(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_4(unsigned char **inPtr) {
+static int runsum_4(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -345,10 +343,11 @@ static int runsum_4(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_5(unsigned char **inPtr) {
+static int runsum_5(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -359,10 +358,11 @@ static int runsum_5(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_6(unsigned char **inPtr) {
+static int runsum_6(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -374,10 +374,11 @@ static int runsum_6(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_7(unsigned char **inPtr) {
+static int runsum_7(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -390,10 +391,11 @@ static int runsum_7(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_8(unsigned char **inPtr) {
+static int runsum_8(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -407,10 +409,11 @@ static int runsum_8(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_9(unsigned char **inPtr) {
+static int runsum_9(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -425,10 +428,11 @@ static int runsum_9(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_10(unsigned char **inPtr) {
+static int runsum_10(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -444,10 +448,11 @@ static int runsum_10(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_11(unsigned char **inPtr) {
+static int runsum_11(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -464,10 +469,11 @@ static int runsum_11(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_12(unsigned char **inPtr) {
+static int runsum_12(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -485,10 +491,11 @@ static int runsum_12(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_13(unsigned char **inPtr) {
+static int runsum_13(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -507,10 +514,11 @@ static int runsum_13(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_14(unsigned char **inPtr) {
+static int runsum_14(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -530,10 +538,11 @@ static int runsum_14(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_15(unsigned char **inPtr) {
+static int runsum_15(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -554,10 +563,11 @@ static int runsum_15(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_16(unsigned char **inPtr) {
+static int runsum_16(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -579,10 +589,11 @@ static int runsum_16(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_17(unsigned char **inPtr) {
+static int runsum_17(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -605,10 +616,11 @@ static int runsum_17(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_18(unsigned char **inPtr) {
+static int runsum_18(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -632,10 +644,11 @@ static int runsum_18(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_19(unsigned char **inPtr) {
+static int runsum_19(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -660,10 +673,11 @@ static int runsum_19(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_20(unsigned char **inPtr) {
+static int runsum_20(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -689,10 +703,11 @@ static int runsum_20(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_21(unsigned char **inPtr) {
+static int runsum_21(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -719,10 +734,11 @@ static int runsum_21(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_22(unsigned char **inPtr) {
+static int runsum_22(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -750,10 +766,11 @@ static int runsum_22(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_23(unsigned char **inPtr) {
+static int runsum_23(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -782,10 +799,11 @@ static int runsum_23(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_24(unsigned char **inPtr) {
+static int runsum_24(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -815,10 +833,11 @@ static int runsum_24(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_25(unsigned char **inPtr) {
+static int runsum_25(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -849,10 +868,11 @@ static int runsum_25(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_26(unsigned char **inPtr) {
+static int runsum_26(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -884,10 +904,11 @@ static int runsum_26(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_27(unsigned char **inPtr) {
+static int runsum_27(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -920,10 +941,11 @@ static int runsum_27(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_28(unsigned char **inPtr) {
+static int runsum_28(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -957,10 +979,11 @@ static int runsum_28(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_29(unsigned char **inPtr) {
+static int runsum_29(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -995,10 +1018,11 @@ static int runsum_29(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_30(unsigned char **inPtr) {
+static int runsum_30(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -1034,10 +1058,11 @@ static int runsum_30(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_31(unsigned char **inPtr) {
+static int runsum_31(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -1074,10 +1099,11 @@ static int runsum_31(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 
-static int runsum_32(unsigned char **inPtr) {
+static int runsum_32(unsigned char **inPtr)
+{
   register int sum;
   register unsigned char *ptr;
   sum = 0;
@@ -1115,7 +1141,7 @@ static int runsum_32(unsigned char **inPtr) {
   sum += *ptr++;
   sum += *ptr++;
   *inPtr = ptr;
-  return(sum);
+  return (sum);
 }
 #if 0
 static int runsum_33(unsigned char **inPtr) {
@@ -2961,29 +2987,32 @@ static int runsum_64(unsigned char **inPtr) {
 }
 #endif
 
-static void runput_1(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_1(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_2(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_2(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
   *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_3(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_3(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -2991,35 +3020,24 @@ static void runput_3(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_4(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
-
-  ptr = *outPtr;
-  *ptr++ = val;
-  *ptr++ = val;
-  *ptr++ = val;
-  *ptr++ = val;
-  *outPtr = ptr;
-}
-static void runput_5(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_4(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_6(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_5(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3027,13 +3045,13 @@ static void runput_6(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_7(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_6(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3042,13 +3060,13 @@ static void runput_7(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_8(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_7(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3058,13 +3076,13 @@ static void runput_8(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_9(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_8(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3075,13 +3093,13 @@ static void runput_9(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_10(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_9(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3093,13 +3111,13 @@ static void runput_10(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_11(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_10(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3112,13 +3130,13 @@ static void runput_11(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_12(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_11(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3132,13 +3150,13 @@ static void runput_12(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_13(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_12(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3153,13 +3171,13 @@ static void runput_13(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_14(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_13(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3175,13 +3193,13 @@ static void runput_14(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_15(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_14(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3198,13 +3216,13 @@ static void runput_15(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_16(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_15(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3222,13 +3240,13 @@ static void runput_16(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_17(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_16(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3247,13 +3265,13 @@ static void runput_17(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_18(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_17(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3273,13 +3291,13 @@ static void runput_18(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_19(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_18(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3300,13 +3318,13 @@ static void runput_19(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_20(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_19(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3328,13 +3346,13 @@ static void runput_20(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_21(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_20(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3357,13 +3375,13 @@ static void runput_21(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_22(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_21(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3387,13 +3405,13 @@ static void runput_22(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_23(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_22(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3418,13 +3436,13 @@ static void runput_23(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_24(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_23(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3450,13 +3468,13 @@ static void runput_24(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_25(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_24(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3483,13 +3501,13 @@ static void runput_25(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_26(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_25(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3517,13 +3535,13 @@ static void runput_26(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_27(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_26(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3552,13 +3570,13 @@ static void runput_27(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_28(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_27(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3588,13 +3606,13 @@ static void runput_28(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_29(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_28(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3625,13 +3643,13 @@ static void runput_29(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_30(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_29(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3663,13 +3681,13 @@ static void runput_30(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
-  *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_31(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_30(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;
@@ -3702,13 +3720,53 @@ static void runput_31(unsigned char **outPtr, unsigned char val) {
   *ptr++ = val;
   *ptr++ = val;
   *ptr++ = val;
+  *outPtr = ptr;
+}
+static void runput_31(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
+
+  ptr = *outPtr;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
+  *ptr++ = val;
   *ptr++ = val;
   *outPtr = ptr;
 }
-static void runput_32(unsigned char **outPtr, unsigned char val) {
-  register int sum;
-  register unsigned char *ptr ;
-  sum = 0;
+static void runput_32(unsigned char **outPtr, unsigned char val)
+{
+  // register int sum;
+  register unsigned char *ptr;
+  // sum = 0;
 
   ptr = *outPtr;
   *ptr++ = val;

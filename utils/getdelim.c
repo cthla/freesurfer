@@ -1,5 +1,5 @@
 /**
-   @file  getdelim.c 
+   @file  getdelim.c
    @brief Implementation of replacement getdelim function.
 
    Copyright (C) 1994, 1996, 1997, 1998, 2001, 2003, 2005 Free
@@ -11,28 +11,28 @@
 #if defined(Darwin) || defined(SunOS)
 // getline does not exist on Mac OS X or Solaris
 #ifdef HAVE_CONFIG_H
-# include <config.h>
+#include <config.h>
 #endif
 
 #include "getdelim.h"
 
+#include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
-#include <errno.h>
 
 #ifndef SIZE_MAX
-# define SIZE_MAX ((size_t) -1)
+#define SIZE_MAX ((size_t)-1)
 #endif
 #ifndef SSIZE_MAX
-# define SSIZE_MAX ((ssize_t) (SIZE_MAX / 2))
+#define SSIZE_MAX ((ssize_t)(SIZE_MAX / 2))
 #endif
 #if !HAVE_FLOCKFILE
-# undef flockfile
-# define flockfile(x) ((void) 0)
+#undef flockfile
+#define flockfile(x) ((void)0)
 #endif
 #if !HAVE_FUNLOCKFILE
-# undef funlockfile
-# define funlockfile(x) ((void) 0)
+#undef funlockfile
+#define funlockfile(x) ((void)0)
 #endif
 
 /* Read up to (and including) a DELIMITER from FP into *LINEPTR (and
@@ -41,8 +41,7 @@
    necessary.  Returns the number of characters read (not including
    the null terminator), or -1 on error or EOF.  */
 
-ssize_t
-getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
+ssize_t getdelim(char **lineptr, size_t *n, int delimiter, FILE *fp)
 {
   ssize_t result = 0;
   size_t cur_len = 0;
@@ -53,12 +52,12 @@ getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
     return -1;
   }
 
-  flockfile (fp);
+  flockfile(fp);
 
   if (*lineptr == NULL || *n == 0)
   {
     *n = 120;
-    *lineptr = (char *) malloc (*n);
+    *lineptr = (char *)malloc(*n);
     if (*lineptr == NULL)
     {
       result = -1;
@@ -70,7 +69,7 @@ getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
   {
     int i;
 
-    i = getc (fp);
+    i = getc(fp);
     if (i == EOF)
     {
       result = -1;
@@ -80,9 +79,8 @@ getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
     /* Make enough space for len+1 (for final NUL) bytes.  */
     if (cur_len + 1 >= *n)
     {
-      size_t needed_max =
-        SSIZE_MAX < SIZE_MAX ? (size_t) SSIZE_MAX + 1 : SIZE_MAX;
-      size_t needed = 2 * *n + 1;   /* Be generous. */
+      size_t needed_max = SSIZE_MAX < SIZE_MAX ? (size_t)SSIZE_MAX + 1 : SIZE_MAX;
+      size_t needed = 2 * *n + 1; /* Be generous. */
       char *new_lineptr;
 
       if (needed_max < needed)
@@ -93,7 +91,7 @@ getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
         goto unlock_return;
       }
 
-      new_lineptr = (char *) realloc (*lineptr, needed);
+      new_lineptr = (char *)realloc(*lineptr, needed);
       if (new_lineptr == NULL)
       {
         result = -1;
@@ -114,7 +112,7 @@ getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
   result = cur_len ? cur_len : result;
 
 unlock_return:
-               funlockfile (fp);
+  funlockfile(fp);
   return result;
 }
 
