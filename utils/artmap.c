@@ -144,9 +144,14 @@ ARTMAP *ArtmapRead(char *fname)
 
   fp = fopen(fname, "r");
   if (!fp)
+  {
     return (NULL);
+  }
 
-  fscanf(fp, "%d %d %d %lf %lf\n", &ninputs, &noutputs, &f2nodes, &beta, &rho_bar);
+  if (fscanf(fp, "%d %d %d %lf %lf\n", &ninputs, &noutputs, &f2nodes, &beta, &rho_bar) != 5)
+  {
+    fprintf(stderr, "Warning: fscanf could not read expectenumber of d values");
+  }
 
   artmap = ArtmapAlloc(ninputs, noutputs, rho_bar, f2nodes);
   artmap->ncommitted = artmap->f2nodes = f2nodes;
@@ -155,7 +160,10 @@ ARTMAP *ArtmapRead(char *fname)
     artmap->flags[j] |= ARTMAP_COMMITTED;
     for (k = 0; k < artmap->noutputs; k++)
     {
-      fscanf(fp, "%d\n", &wj);
+      if (fscanf(fp, "%d\n", &wj) != 1)
+      {
+        fprintf(stderr, "Warning: fscanf could not read expectenumber of d values");
+      }
       *Mwj(artmap, j, k) = wj;
     }
   }
@@ -164,7 +172,10 @@ ARTMAP *ArtmapRead(char *fname)
   {
     for (j = 0; j < artmap->f2nodes; j++)
     {
-      fscanf(fp, "%lf\n", &zj);
+      if (fscanf(fp, "%lf\n", &zj) != 1)
+      {
+        fprintf(stderr, "Warning: fscanf could not read expectenumber of d values");
+      }
       *Mzj(artmap, i, j) = zj;
     }
   }
@@ -282,9 +293,9 @@ int artProcess(ARTMAP *artmap, double *I)
   do
   {
     /*
-      in test mode, if the first neither of the 1st two classes
-      survive feedback, give it up.
-    */
+  in test mode, if the first neither of the 1st two classes
+  survive feedback, give it up.
+*/
     if (!artmap->learn && ++nclass > 2)
     {
       artmap->match = 0.0;
@@ -440,7 +451,8 @@ static int artFeedBack(ARTMAP *artmap, int class)
 static int artFeedForward(ARTMAP *artmap)
 {
   int max_j, j;
-  double f2, max_out;
+  // double f2,
+  double max_out;
 
   max_j = -1;
   max_out = -1.0;
@@ -450,7 +462,8 @@ static int artFeedForward(ARTMAP *artmap)
     if (artmap->flags[j] & ARTMAP_RESET)
       continue; /* this node was previous winner */
 
-    f2 = artmap->f2[j] = artChoice(artmap, j);
+    // f2 =
+    artmap->f2[j] = artChoice(artmap, j);
     if (artmap->f2[j] > max_out)
     {
       max_j = j;
@@ -535,14 +548,15 @@ static double norm(double huge *a, int len)
 */
 static void artFastLearn(ARTMAP *artmap, int j)
 {
-  double norm_I_int_zj;
+  // double norm_I_int_zj;
   int i;
 
   if (j < 0)
     return; /* not a valid class */
 
   intersect(artmap->f0, Mzj(artmap, 0, j), artmap->scratch, artmap->ninputs);
-  norm_I_int_zj = norm(artmap->scratch, artmap->ninputs);
+  // norm_I_int_zj =
+  norm(artmap->scratch, artmap->ninputs);
   for (i = 0; i < artmap->ninputs; i++)
   {
     *Mzj(artmap, i, j) = artmap->scratch[i];

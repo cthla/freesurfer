@@ -1,9 +1,10 @@
-
-#include "gifti_tool.h"
-#include "gifti_io.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "gifti_io.h"
+
+#include "gifti_tool.h"
 
 static char *g_history[] = { "----------------------------------------------------------------------\n"
                              "history (of gifti_tool):\n"

@@ -477,7 +477,10 @@ FunD_tErr FunD_FindAndParseStemHeader_(mriFunctionalDataRef this)
       nNumValues = pow(this->mNumTimePoints * (this->mNumConditions - 1), 2);
       for (nValue = 0; nValue < nNumValues; nValue++)
       {
-        fscanf(pHeader, "%*d");
+        if (fscanf(pHeader, "%*d") != 0)
+        {
+          DebugNote(("Reading variable failed"));
+        }
       }
       bSomethingRead = TRUE;
     }
@@ -685,7 +688,10 @@ FunD_tErr FunD_ParseRegistrationAndInitMatricies_(mriFunctionalDataRef this,
     {
 
       /* read line and look for string */
-      fgets(sLine, 1024, fRegister);
+      if (!fgets(sLine, 1024, fRegister) && ferror(fRegister))
+      {
+        break;
+      }
       if (feof(fRegister))
       {
         break;
@@ -2063,7 +2069,10 @@ FunD_tErr FunD_SaveRegistration(mriFunctionalDataRef this)
     DebugNote(("Copying bytes to backup file"));
     while (!feof(pFile))
     {
-      fread(&data, sizeof(data), 1, pFile);
+      if (fread(&data, sizeof(data), 1, pFile) != 1)
+      {
+        DebugNote(("Could not read variable"));
+      }
       if (feof(pFile))
       {
         break;

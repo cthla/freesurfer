@@ -22,7 +22,13 @@
  *
  */
 
-#include "mri2.h"
+#include <float.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
 #include "bfileio.h"
 #include "chronometer.h"
 #include "cma.h"
@@ -38,12 +44,8 @@
 #include "region.h"
 #include "sig.h"
 #include "stats.h"
-#include <float.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+
+#include "mri2.h"
 
 //#define MRI2_TIMERS
 
@@ -277,7 +279,8 @@ int mri_save_as_cor(MRI *vol, char *cordir, int frame, int rescale)
 MRI *mri_rescale(MRI *vol, float min, float max, MRI *outvol)
 {
   int r, c, s, f;
-  float val, volmin, volmax, volrange, range;
+  float val, volmin, volmax, range;
+  // float volrange;
   MRI *tmpvol;
 
   if (outvol != NULL)
@@ -309,7 +312,7 @@ MRI *mri_rescale(MRI *vol, float min, float max, MRI *outvol)
       }
     }
   }
-  volrange = volmax - volmin;
+  // volrange = volmax - volmin;
   range = max - min;
 
   /* rescale to the new range */
@@ -773,7 +776,8 @@ int MRIvol2Vol(MRI *src, MRI *targ, MATRIX *Vt2s, int InterpCode, float param)
 #ifdef FS_CUDA
   int cudaReturn;
 #else
-  int ct, tid, show_progress_thread;
+  int ct, show_progress_thread;
+  int tid;
   float *valvects[_MAX_FS_THREADS];
 #endif
   int sinchw;
@@ -858,13 +862,13 @@ int MRIvol2Vol(MRI *src, MRI *targ, MATRIX *Vt2s, int InterpCode, float param)
 #endif
   for (ct = 0; ct < targ->width; ct++)
   {
-    int rt, st, f, tid;
+    int rt, st, f;
     int ics, irs, iss;
     float fcs, frs, fss, *valvect;
     double rval;
 
 #ifdef HAVE_OPENMP
-    tid = omp_get_thread_num();
+    int tid = omp_get_thread_num();
     valvect = valvects[tid];
 #else
     valvect = valvects[0];
@@ -5103,7 +5107,8 @@ MRI *MRIannot2CorticalSeg(MRI *seg, MRIS *lhw, MRIS *lhp, MRIS *rhw, MRIS *rhp, 
 #endif
   for (c = 0; c < seg->width; c++)
   {
-    int r, s, asegv, annot, annotid, vtxno, wvtxno, pvtxno, segv, wmval;
+    int r, s, asegv, annot, annotid, vtxno, wvtxno, pvtxno, segv;
+    // int wmval;
     VERTEX vtx;
     MATRIX *RAS = NULL, *CRS = NULL;
     float wdw, pdw;
@@ -5130,7 +5135,7 @@ MRI *MRIannot2CorticalSeg(MRI *seg, MRIS *lhw, MRIS *lhp, MRIS *rhw, MRIS *rhp, 
           whash = lhw_hash;
           phash = lhp_hash;
           psurf = lhp;
-          wmval = Left_Cerebral_White_Matter;
+          // wmval = Left_Cerebral_White_Matter;
         }
         else
         {
@@ -5138,7 +5143,7 @@ MRI *MRIannot2CorticalSeg(MRI *seg, MRIS *lhw, MRIS *lhp, MRIS *rhw, MRIS *rhp, 
           whash = rhw_hash;
           phash = rhp_hash;
           psurf = rhp;
-          wmval = Right_Cerebral_White_Matter;
+          // wmval = Right_Cerebral_White_Matter;
         }
 
         // Compute location of voxel in surface space

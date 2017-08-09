@@ -550,9 +550,9 @@ int RBMactivateBackward(RBM *rbm)
     {
       double act;
       int h;
-      double var;
+      // double var;
 
-      var = exp(rbm->variance[v]);
+      // var = exp(rbm->variance[v]);
       act = rbm->visible_bias[v];
       for (h = 0; h < rbm->nhidden; h++)
         act += rbm->weights[v][h] * rbm->hidden_state[h];
@@ -1083,17 +1083,19 @@ int RBMtrainFromImage(RBM *rbm, MRI *mri_inputs, MRI *mri_labels, RBM_PARMS *par
 
 int RBMtrainFromVoxlistImage(RBM *rbm, VOXLIST *vl, RBM_PARMS *parms)
 {
-  double sparsity, training_rate, last_rms, pct_diff, rms, momentum, delta, min_rms, **dw, *dvisible_bias,
-      *dhidden_bias, *dvariance, *last_dvariance, *dlabel_bias = NULL, **dlabel_weights = NULL, **last_dw,
-                                                  *last_dvisible_bias, *last_dhidden_bias, *last_dlabel_bias = NULL,
-                                                  **last_dlabel_weights = NULL, mean, var;
+  double training_rate, last_rms, pct_diff, rms, momentum, delta, min_rms, **dw, *dvisible_bias, *dhidden_bias,
+      *dvariance, *last_dvariance, *dlabel_bias = NULL, **dlabel_weights = NULL, **last_dw, *last_dvisible_bias,
+                                   *last_dhidden_bias, *last_dlabel_bias = NULL, **last_dlabel_weights = NULL, var;
+
+  // double sparsity, mean;
   int v, h, step, nbad, *indices, index, b, held_out_index;
 
   if (!FZERO(parms->variance))
     var = parms->variance;
   else // estimate it from data
   {
-    mean = VLSTmean(vl, NULL, &var);
+    // mean =
+    VLSTmean(vl, NULL, &var);
     var /= parms->nclasses;
     printf("setting initial variances to %2.3f\n", var);
   }
@@ -1141,7 +1143,7 @@ int RBMtrainFromVoxlistImage(RBM *rbm, VOXLIST *vl, RBM_PARMS *parms)
         ErrorExit(ERROR_NOMEMORY, "RBMtrain: could not allocate weight gradients");
     }
   }
-  sparsity = parms->sparsity[0];
+  // sparsity = parms->sparsity[0];
   training_rate = parms->training_rates[0];
   momentum = parms->momentum[0];
 
@@ -1536,10 +1538,11 @@ int DBNtrainFromImage(DBN *dbn, MRI *mri_inputs, MRI *mri_labels, RBM_PARMS *par
 
 int DBNtrainFromVoxlistImage(DBN *dbn, VOXLIST *vl, RBM_PARMS *parms)
 {
-  double sparsity, training_rate, last_rms, pct_diff, rms, momentum, delta, min_rms, **dw, *dvisible_bias,
-      *dhidden_bias, *dvariance, *last_dvariance, *dlabel_bias = NULL, **dlabel_weights = NULL, **last_dw,
-                                                  *last_dvisible_bias, *last_dhidden_bias, *last_dlabel_bias = NULL,
-                                                  **last_dlabel_weights = NULL, mean, var;
+  double training_rate, last_rms, pct_diff, rms, momentum, delta, min_rms, **dw, *dvisible_bias, *dhidden_bias,
+      *dvariance, *last_dvariance, *dlabel_bias = NULL, **dlabel_weights = NULL, **last_dw, *last_dvisible_bias,
+                                   *last_dhidden_bias, *last_dlabel_bias = NULL, **last_dlabel_weights = NULL, var;
+
+  // double sparsity, mean;
   int l, v, h, step, nbad, *indices, index, b, held_out_index;
   RBM *rbm;
 
@@ -1547,7 +1550,8 @@ int DBNtrainFromVoxlistImage(DBN *dbn, VOXLIST *vl, RBM_PARMS *parms)
     var = parms->variance;
   else // estimate it from data
   {
-    mean = VLSTmean(vl, NULL, &var);
+    // mean =
+    VLSTmean(vl, NULL, &var);
     var /= parms->nclasses;
     printf("setting initial variances to %2.3f\n", var);
   }
@@ -1569,7 +1573,7 @@ int DBNtrainFromVoxlistImage(DBN *dbn, VOXLIST *vl, RBM_PARMS *parms)
   {
     printf("!!!!!!!!!!!!!!!!!!!!!!!!!! TRAINING LAYER %d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n", l);
 
-    sparsity = parms->sparsity[l];
+    // sparsity = parms->sparsity[l];
     momentum = parms->momentum[l];
     training_rate = parms->training_rates[l];
 
@@ -2192,12 +2196,10 @@ static int reset_hidden_nodes(CDBN *cdbn, int layer, double min_active, double m
 #if 0
   int    v ;
 #endif
-  double wt_lim;
   RBM *rbm;
 
   rbm = cdbn->rbms[layer];
 
-  wt_lim = 1.0 / rbm->nhidden;
   for (num_off = num_on = h = 0; h < rbm->nhidden; h++)
   {
     if (rbm->active[h] < min_active || rbm->active[h] > max_active) // always on or off
@@ -2207,6 +2209,7 @@ static int reset_hidden_nodes(CDBN *cdbn, int layer, double min_active, double m
       else
         num_on++;
 #if 0
+ // double wt_lim = 1.0 / rbm->nhidden;
       rbm->hidden_bias[h] = 0 ;
       for (v = 0 ; v < rbm->nvisible ; v++)
 	rbm->weights[v][h] *= .9 ;
@@ -2239,7 +2242,9 @@ int CDBNtrainFromVoxlistImage(CDBN *cdbn, VOXLIST *vl, RBM_PARMS *parms, MRI *mr
       *dhidden_bias, *dvariance, *last_dvariance,
       *dlabel_bias = NULL, **dlabel_weights = NULL, **last_dw, *last_dvisible_bias, *last_dhidden_bias,
       *last_dlabel_bias = NULL, **last_dlabel_weights = NULL, mean, var, label_rms, min_label_rms, last_label_rms,
-      label_pct_diff, saved_rms;
+      label_pct_diff;
+
+  // double saved_rms;
   int layer, v, h, step, nbad, *indices, index, b, held_out_index, new_min = 0;
   RBM *rbm, *rbm_min, *rbm_min_label, *rbm_save;
   MRI *mri_layer_inputs;
@@ -2458,7 +2463,7 @@ int CDBNtrainFromVoxlistImage(CDBN *cdbn, VOXLIST *vl, RBM_PARMS *parms, MRI *mr
       last_rms = rms;
       last_label_rms = label_rms;
     }
-    saved_rms = rms;
+    // saved_rms = rms;
     rbm_save = RBMcopy(cdbn->rbms[layer], NULL);
 
     rbm = RBMcopy(rbm_min, cdbn->rbms[layer]); // restore best one
@@ -2619,7 +2624,8 @@ int CDBNtrainFromVoxlistImage(CDBN *cdbn, VOXLIST *vl, RBM_PARMS *parms, MRI *mr
 double CDBNvoxlistRMS(
     CDBN *cdbn, int layer, VOXLIST *vl, RBM_PARMS *parms, int *indices, int index, int num, double *plabel_rms)
 {
-  int i, x, y, z, f, n, ind, h, v, nvox, current_label, l;
+  int i, x, y, z, n, ind, h, v, nvox, current_label, l;
+  // int f;
   double rms, *visible, label_rms;
   MRI *mri_inputs;
   RBM *rbm;
@@ -2640,7 +2646,7 @@ double CDBNvoxlistRMS(
       x = vl->xi[i];
       y = vl->yi[i];
       z = vl->zi[i];
-      f = vl->fi[i];
+      // f = vl->fi[i];
       RBMsetLabel(rbm, current_label = nint(vl->vsrc[i]));
       CDBNfillVisible(cdbn, mri_inputs, rbm->visible, x, y, z, rbm->ksize);
       RBMactivateForward(rbm, rbm->visible);
@@ -2680,7 +2686,7 @@ double CDBNvoxlistRMS(
       x = vl->xi[i];
       y = vl->yi[i];
       z = vl->zi[i];
-      f = vl->fi[i];
+      // f = vl->fi[i];
       RBMsetLabel(rbm, nint(vl->vsrc[i]));
       CDBNfillVisible(cdbn, mri_inputs, visible, x, y, z, parms->ksize);
       RBMactivateForward(rbm, visible);
@@ -2721,7 +2727,8 @@ int CDBNcomputeGradients(CDBN *cdbn,
                          int *indices,
                          int index)
 {
-  int i, x, y, z, f, n, v, h, ind, current_label;
+  int i, x, y, z, n, v, h, ind, current_label;
+  // int f;
   double *visible, Q0, Qn, V0, Vn, *hidden0, scale, *db_sparsity, *active;
   MRI *mri_inputs = vl->mri;
   RBM *rbm;
@@ -2752,7 +2759,7 @@ int CDBNcomputeGradients(CDBN *cdbn,
     x = vl->xi[i];
     y = vl->yi[i];
     z = vl->zi[i];
-    f = vl->fi[i];
+    // f = vl->fi[i];
     if (y > 0)
       DiagBreak();
     RBMsetLabel(rbm, current_label = nint(vl->vsrc[i]));
@@ -2923,7 +2930,8 @@ int CDBNcomputeDiscriminativeGradients(CDBN *cdbn,
                                        int *indices,
                                        int index)
 {
-  int l, i, x, y, z, f, n, v, h, ind, current_label;
+  int l, i, x, y, z, n, v, h, ind, current_label;
+  // int  f;
   double *visible, scale, var;
   MRI *mri_inputs = vl->mri;
   RBM *rbm;
@@ -2949,7 +2957,7 @@ int CDBNcomputeDiscriminativeGradients(CDBN *cdbn,
     x = vl->xi[i];
     y = vl->yi[i];
     z = vl->zi[i];
-    f = vl->fi[i];
+    // f = vl->fi[i];
     if (y > 0)
       DiagBreak();
 
@@ -3055,7 +3063,8 @@ int CDBNcomputeLabelGradients(CDBN *cdbn,
                               int *indices,
                               int index)
 {
-  int l, i, x, y, z, f, n, v, h, ind, current_label;
+  int l, i, x, y, z, n, v, h, ind, current_label;
+  // int f;
   double *visible, scale, var, softmax_deriv[MAX_RBM_LABELS];
   MRI *mri_inputs = vl->mri;
   RBM *rbm;
@@ -3081,7 +3090,7 @@ int CDBNcomputeLabelGradients(CDBN *cdbn,
     x = vl->xi[i];
     y = vl->yi[i];
     z = vl->zi[i];
-    f = vl->fi[i];
+    // f = vl->fi[i];
     if (y > 0)
       DiagBreak();
     RBMsetLabel(rbm, current_label = nint(vl->vsrc[i]));

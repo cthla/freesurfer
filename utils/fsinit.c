@@ -7,9 +7,12 @@
 
 int FSinit(void)
 {
-  char *cp;
+  // char *cp;
   if (getenv("FS_DISABLE_LANG") == NULL)
-    cp = setlocale(LC_NUMERIC, "en_US");
+    if (!setlocale(LC_NUMERIC, "en_US"))
+    {
+      ErrorPrintf(NO_ERROR, "Could not set locale");
+    }
 #ifdef HAVE_OPENMP
   if (getenv("OMP_NUM_THREADS") == NULL)
     omp_set_num_threads(1);

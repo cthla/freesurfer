@@ -1,6 +1,11 @@
 # git ls-files --others --exclude-from=.git/info/exclude
 
+<<<<<<< HEAD
 .vscode/
+=======
+# editor related configs
+.vscode
+>>>>>>> b1efa996d8... Utils dir + dependencies compiles without warnings using gcc 4.9.4 + clang formatting
 
 # a bit more complicated for GEMS to go first so that
 # later patterns pick up ignores as well:

@@ -55,6 +55,8 @@ int mriNrrdWriteDiffusion(MRI *mri, char *fname)
 #include <unistd.h>
 
 extern "C" {
+#include "minc_volume_io.h"
+
 #include "analyze.h"
 #include "chklc.h"
 #include "diag.h"
@@ -65,7 +67,6 @@ extern "C" {
 #include "matfile.h"
 #include "math.h"
 #include "matrix.h"
-#include "minc_volume_io.h"
 #include "mri.h"
 #include "mri_identify.h"
 #include "proto.h"
@@ -86,6 +87,9 @@ extern "C" {
 #ifdef ULONG
 #undef ULONG
 #endif
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 
 #include "itkImage.h"
 //#include "itkExceptionObject.h"

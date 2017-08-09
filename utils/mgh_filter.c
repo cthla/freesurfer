@@ -23,11 +23,12 @@
  *
  */
 
-#include "matrix.h"
-#include "typedefs.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "matrix.h"
+#include "typedefs.h"
 
 #define SWAP(a, b)                                                                                                     \
   tempr = (a);                                                                                                         \
@@ -116,10 +117,11 @@ static void lowpass(float data[],int nn,float hi)
 
 static void bandpass(float data[], int nn, float lo, float hi)
 {
-  float norm, f, fl, fh, w, wh, wl;
+  // float norm,
+  float f, fl, fh, w, wh, wl;
   int i;
 
-  norm = 1 / (sqrt(2 * M_PI) * hi);
+  // norm = 1 / (sqrt(2 * M_PI) * hi);
   wh = hi;
   wl = lo;
   four1(data - 1, nn, 1);

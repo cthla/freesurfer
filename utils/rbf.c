@@ -649,7 +649,8 @@ float RBFcomputeErrors(RBF *rbf, int class, VECTOR *v_error)
 static int rbfAdjustOutputWeights(RBF *rbf, VECTOR *v_error)
 {
   int i, j;
-  float dE_dwi, Gi, delta_wij, one_minus_momentum, trate, momentum;
+  float Gi, delta_wij, one_minus_momentum, trate, momentum;
+  // float dE_dwi;
 
   momentum = rbf->momentum;
   trate = rbf->trate;
@@ -657,7 +658,7 @@ static int rbfAdjustOutputWeights(RBF *rbf, VECTOR *v_error)
 
   for (i = 1; i <= rbf->nhidden + 1; i++)
   {
-    dE_dwi = 0.0f; /* gradient for this weight */
+    // dE_dwi = 0.0f; /* gradient for this weight */
     Gi = RVECTOR_ELT(rbf->v_hidden, i);
 
     /* adjust the weight connected to each output node for this hidden unit */
@@ -1230,7 +1231,8 @@ RBF *RBFcopyWeights(RBF *rbf_src, RBF *rbf_dst)
 static float rbfComputeCurrentError(
     RBF *rbf, int (*get_observation_func)(VECTOR *v_obs, int no, void *parm, int same_class, int *pclass), void *parm)
 {
-  float error, sse, obs_no, rms;
+  float error, sse, obs_no;
+  // float rms;
   VECTOR *v_obs, *v_error;
   int class;
 
@@ -1249,7 +1251,7 @@ static float rbfComputeCurrentError(
     error = RBFcomputeErrors(rbf, class, v_error);
     sse += error;
   }
-  rms = sqrt(sse / (float)rbf->nobs);
+  // rms = sqrt(sse / (float)rbf->nobs);
 
   VectorFree(&v_obs);
   VectorFree(&v_error);

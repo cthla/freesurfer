@@ -31,6 +31,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "mrisurf.h"
+
 #include "annotation.h"
 #include "chklc.h"
 #include "cma.h"
@@ -43,17 +45,16 @@
 #include "icosahedron.h"
 #include "macros.h"
 #include "matrix.h"
-#include "mri.h"
 #include "mri_identify.h"
 #include "mrisegment.h"
 #include "mrishash.h"
-#include "mrisurf.h"
-#include "mrisutils.h"
 #include "proto.h"
 #include "sig.h"
 #include "stats.h"
 #include "timer.h"
 #include "tritri.h"
+
+#include "mrisutils.h"
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
@@ -551,7 +552,8 @@ static MRI *mriIsolateLabel(MRI *mri_seg, int label, MRI_REGION *bbox)
 
 static double mrisRmsValError(MRI_SURFACE *mris, MRI *mri)
 {
-  int vno, n, xv, yv, zv;
+  int vno, n;
+  // int xv, yv, zv;
   double val, total, delta, x, y, z;
   VERTEX *v;
 
@@ -562,9 +564,9 @@ static double mrisRmsValError(MRI_SURFACE *mris, MRI *mri)
       continue;
     n++;
     MRISvertexToVoxel(mris, v, mri, &x, &y, &z);
-    xv = nint(x);
-    yv = nint(y);
-    zv = nint(z);
+    // xv = nint(x);
+    // yv = nint(y);
+    // zv = nint(z);
     MRIsampleVolume(mri, x, y, z, &val);
     delta = (val - v->val);
     total += delta * delta;
@@ -1099,7 +1101,8 @@ MRIS *MRISmatchSurfaceToLabel(
   MRI *mri;
   INTEGRATION_PARMS *parms;
   int parms_indicator = 0;
-  double sse, last_sse, rms, last_rms, base_dt, dt, delta_t = 0.0;
+  double sse, last_sse, rms, last_rms, base_dt, dt;
+  // double delta_t = 0.0;
   double tol;
   MHT *mht = NULL;
   int avgs = AVERAGES_NBR;
@@ -1208,7 +1211,8 @@ MRIS *MRISmatchSurfaceToLabel(
     do
     {
       MRISsaveVertexPositions(mris, TMP_VERTICES);
-      delta_t = mrisAsynchronousTimeStepNew(mris, parms->momentum, dt, mht, MAX_ASYNCH_MM);
+      // delta_t =
+      mrisAsynchronousTimeStepNew(mris, parms->momentum, dt, mht, MAX_ASYNCH_MM);
 
       MRIScomputeMetricProperties(mris);
       rms = mrisRmsValError(mris, mri);
@@ -2189,15 +2193,15 @@ int MRISfindPath(int *vert_vno, int num_vno, int max_path_length, int *path, int
   int neighbor_vno;
   float dist_uv;
   int path_vno;
-  int num_path = 0;
+  // int num_path = 0;
   int num_checked;
-  float vu_x, vu_y, vu_z;
+  // float vu_x, vu_y, vu_z;
   int flag2d = 0; // for flattend surface?
 
   dist = (float *)calloc(mris->nvertices, sizeof(float));
   pred = (int *)calloc(mris->nvertices, sizeof(int));
   check = (char *)calloc(mris->nvertices, sizeof(char));
-  num_path = 0;
+  // num_path = 0;
   num_checked = 0;
   (*path_length) = 0;
 
@@ -2258,12 +2262,12 @@ int MRISfindPath(int *vert_vno, int num_vno, int max_path_length, int *path, int
           u = &(mris->vertices[neighbor_vno]);
 
           /* calc the vector from u to v. */
-          vu_x = u->x - v->x;
-          vu_y = u->y - v->y;
-          if (flag2d)
-            vu_z = 0;
-          else
-            vu_z = u->z - v->z;
+          // vu_x = u->x - v->x;
+          // vu_y = u->y - v->y;
+          // if (flag2d)
+          //   vu_z = 0;
+          // else
+          //   vu_z = u->z - v->z;
 
           /* recalc the weight. */
           if (flag2d)
@@ -2321,14 +2325,15 @@ MRI *MRIScomputeFlattenedVolume(MRI_SURFACE *mris,
 {
   MRI *mri_flat, *mri_mask, *mri_counts, *mri_vno;
   int vno, width, height, u, v, w, fno, num;
-  int uk, vk, ui, vi, whalf = 3, nv, wm_samples, outside_samples;
+  int uk, vk, ui, vi, whalf = 3, nv;
+  // int wm_samples, outside_samples;
   double xmin, xmax, ymin, ymax, fdist, x, y, z, dx, dy, dz, norm, xf, yf, val, xv, yv, zv, oval, max_change;
   VERTEX *v0, *v1, *v2;
   FACE *face;
   MHT *mht;
 
-  wm_samples = nint(wm_dist / res);
-  outside_samples = nint(outside_dist / res);
+  // wm_samples = nint(wm_dist / res);
+  // outside_samples = nint(outside_dist / res);
   mht = MHTfillTableAtResolution(mris, NULL, FLATTENED_VERTICES, 2.0);
   ymax = xmax = -1e10;
   ymin = xmin = 1e10;

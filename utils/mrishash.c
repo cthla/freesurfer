@@ -2000,7 +2000,7 @@ VERTEX *MHTfindClosestVertex(MRIS_HASH_TABLE *mht, MRI_SURFACE *mris, VERTEX *v)
 {
   //------------------------------------------------------
   VERTEX *vtx;
-  int rslt;
+  // int rslt;
   float x = 0.0, y = 0.0, z = 0.0;
 
   mhtFindCommonSanityCheck(mht, mris);
@@ -2010,16 +2010,17 @@ VERTEX *MHTfindClosestVertex(MRIS_HASH_TABLE *mht, MRI_SURFACE *mris, VERTEX *v)
   //---------------------------------
   mhtVertex2xyz_float(v, mht->which_vertices, &x, &y, &z);
 
-  rslt = MHTfindClosestVertexGeneric(mht,
-                                     mris,
-                                     x,
-                                     y,
-                                     z,
-                                     1000,
-                                     1, // max_mhts: search out to 3 x 3 x 3
-                                     &vtx,
-                                     NULL,
-                                     NULL);
+  // rslt =
+  MHTfindClosestVertexGeneric(mht,
+                              mris,
+                              x,
+                              y,
+                              z,
+                              1000,
+                              1, // max_mhts: search out to 3 x 3 x 3
+                              &vtx,
+                              NULL,
+                              NULL);
 
   return vtx;
 }
@@ -2032,7 +2033,7 @@ FACE *MHTfindClosestFaceToVertex(MRIS_HASH_TABLE *mht, MRI_SURFACE *mris, VERTEX
 {
   //------------------------------------------------------
   FACE *face;
-  int rslt;
+  // int rslt;
   float x = 0.0, y = 0.0, z = 0.0;
 
   mhtFindCommonSanityCheck(mht, mris);
@@ -2042,17 +2043,18 @@ FACE *MHTfindClosestFaceToVertex(MRIS_HASH_TABLE *mht, MRI_SURFACE *mris, VERTEX
   //---------------------------------
   mhtVertex2xyz_float(v, mht->which_vertices, &x, &y, &z);
 
-  rslt = MHTfindClosestFaceGeneric(mht,
-                                   mris,
-                                   x,
-                                   y,
-                                   z,
-                                   1000,
-                                   1,  // max_mhts: search out to 3 x 3 x 3
-                                   -1, // don't force it to project into the face
-                                   &face,
-                                   NULL,
-                                   NULL);
+  // rslt =
+  MHTfindClosestFaceGeneric(mht,
+                            mris,
+                            x,
+                            y,
+                            z,
+                            1000,
+                            1,  // max_mhts: search out to 3 x 3 x 3
+                            -1, // don't force it to project into the face
+                            &face,
+                            NULL,
+                            NULL);
 
   return face;
 }
@@ -2085,7 +2087,7 @@ VERTEX *MHTfindClosestVertexSet(MRIS_HASH_TABLE *mht, MRI_SURFACE *mris, VERTEX 
 {
   //------------------------------------------------------
   VERTEX *vtx = NULL;
-  int rslt;
+  // int rslt;
   float x = 0.0, y = 0.0, z = 0.0;
 
   //---------------------------------
@@ -2112,16 +2114,17 @@ VERTEX *MHTfindClosestVertexSet(MRIS_HASH_TABLE *mht, MRI_SURFACE *mris, VERTEX 
 // End [GW 2007-07-25]
 #endif
 
-  rslt = MHTfindClosestVertexGeneric(mht,
-                                     mris,
-                                     x,
-                                     y,
-                                     z,
-                                     1000,
-                                     3, // max_mhts: search out to 7 x 7 x 7
-                                     &vtx,
-                                     NULL,
-                                     NULL);
+  // rslt =
+  MHTfindClosestVertexGeneric(mht,
+                              mris,
+                              x,
+                              y,
+                              z,
+                              1000,
+                              3, // max_mhts: search out to 7 x 7 x 7
+                              &vtx,
+                              NULL,
+                              NULL);
 
   // [2007-07-30 GW] GW's edition of the brute-force fall-back.
 
@@ -2187,37 +2190,40 @@ MHTfindClosestVertexInTable(MRIS_HASH_TABLE *mht, MRI_SURFACE *mris, float x, fl
 {
   //------------------------------------------------------
   VERTEX *vtx;
-  int rslt, i;
+  // int rslt;
+  int i;
 
   mhtFindCommonSanityCheck(mht, mris);
 
   //---------------------------------
   // Generic find
   //---------------------------------
-  rslt = MHTfindClosestVertexGeneric(mht,
-                                     mris,
-                                     x,
-                                     y,
-                                     z,
-                                     1000,
-                                     1, // max_mhts: search out to 7x7x7 (was 1, BRF)
-                                     &vtx,
-                                     NULL,
-                                     NULL);
+  // rslt =
+  MHTfindClosestVertexGeneric(mht,
+                              mris,
+                              x,
+                              y,
+                              z,
+                              1000,
+                              1, // max_mhts: search out to 7x7x7 (was 1, BRF)
+                              &vtx,
+                              NULL,
+                              NULL);
   if (!vtx && do_global_search) // do more local search first
   {
     for (i = 2; i <= 4; i++)
     {
-      rslt = MHTfindClosestVertexGeneric(mht,
-                                         mris,
-                                         x,
-                                         y,
-                                         z,
-                                         1000,
-                                         i, // max_mhts: search out to 7x7x7 (was 1, BRF)
-                                         &vtx,
-                                         NULL,
-                                         NULL);
+      // rslt =
+      MHTfindClosestVertexGeneric(mht,
+                                  mris,
+                                  x,
+                                  y,
+                                  z,
+                                  1000,
+                                  i, // max_mhts: search out to 7x7x7 (was 1, BRF)
+                                  &vtx,
+                                  NULL,
+                                  NULL);
       if (vtx) // found it
         break;
     }

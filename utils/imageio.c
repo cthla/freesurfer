@@ -102,13 +102,14 @@ static byte endian = END_UNDEF;
 int ImageWrite(IMAGE *I, const char *fname)
 {
   FILE *fp;
-  int ecode;
+  // int ecode;
 
   fp = fopen(fname, "wb");
   if (!fp)
     ErrorReturn(-1, (ERROR_NO_FILE, "ImageWrite(%s) failed\n", fname));
 
-  ecode = ImageFWrite(I, fp, fname);
+  // ecode =
+  ImageFWrite(I, fp, fname);
   fclose(fp);
   return (0);
 }
@@ -806,7 +807,7 @@ static IMAGE *TiffReadImage(const char *fname, int frame0)
   float    r, g, b, y;
   float    *pf;
 #endif
-  int scanlinesize, extra_samples;
+  int scanlinesize; //, extra_samples;
   int index = 0;
   float xres, yres, res;
 
@@ -922,7 +923,7 @@ static IMAGE *TiffReadImage(const char *fname, int frame0)
       break;
     }
   }
-  extra_samples = 0;
+  // extra_samples = 0;
   switch (nsamples)
   {
   case 1:
@@ -944,7 +945,7 @@ static IMAGE *TiffReadImage(const char *fname, int frame0)
     }
     break;
   case 4:
-    extra_samples = 1;
+    // extra_samples = 1;
     nsamples = 3;
   // no break
   case 3:
@@ -1189,7 +1190,7 @@ void __eprintf(void) {}
 static IMAGE *TiffReadHeader(const char *fname, IMAGE *I)
 {
   TIFF *tif = TIFFOpen(fname, "r");
-  int ret, width, height, bits_per_sample, extra_samples;
+  int width, height, bits_per_sample; //, ret, extra_samples;
   short nsamples;
   int type = PFBYTE; // just make compiler happy
   if (!tif)
@@ -1198,9 +1199,10 @@ static IMAGE *TiffReadHeader(const char *fname, IMAGE *I)
   TIFFGetFieldDefaulted(tif, TIFFTAG_IMAGEWIDTH, &width);
   TIFFGetFieldDefaulted(tif, TIFFTAG_IMAGELENGTH, &height);
   TIFFGetFieldDefaulted(tif, TIFFTAG_SAMPLESPERPIXEL, &nsamples);
-  ret = TIFFGetFieldDefaulted(tif, TIFFTAG_BITSPERSAMPLE, &bits_per_sample);
+  // ret =
+  TIFFGetFieldDefaulted(tif, TIFFTAG_BITSPERSAMPLE, &bits_per_sample);
 
-  extra_samples = 0;
+  // extra_samples = 0;
   switch (nsamples)
   {
   case 1:
@@ -1219,7 +1221,7 @@ static IMAGE *TiffReadHeader(const char *fname, IMAGE *I)
     }
     break;
   case 4:
-    extra_samples = 1;
+  // extra_samples = 1;
   // no break
   case 3:
     switch (bits_per_sample)

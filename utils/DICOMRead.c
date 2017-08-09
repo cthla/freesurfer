@@ -33,21 +33,26 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+
 #ifndef Darwin
 #include <malloc.h>
 #else
 void *malloc(size_t size);
-
 #endif
+
+#include <math.h>
+
+#include "mri.h"
+
 #include "diag.h"
 #include "dti.h"
 #include "fio.h"
 #include "fsenv.h"
 #include "macros.h" // DEGREES
 #include "mosaic.h"
-#include "mri.h"
 #include "mri_identify.h"
-#include <math.h>
+
+// #include "affine.h"
 
 #define _DICOMRead_SRC
 #include "DICOMRead.h"
@@ -3282,7 +3287,10 @@ char **ReadSiemensSeries(const char *ListFile, int *nList, const char *dcmfile)
 
   for (n = 0; n < ((*nList) - AddDCMFile); n++)
   {
-    fscanf(fp, "%s", tmpstr);
+    if (fscanf(fp, "%s", tmpstr) != 1)
+    {
+      fprintf(stderr, "ERROR: could not scan string\n");
+    }
     fbase = fio_basename(tmpstr, NULL);
     sprintf(tmpstr, "%s/%s", dcmdir, fbase);
     SeriesList[n] = (char *)calloc(strlen(tmpstr) + 1, sizeof(char));
@@ -3811,9 +3819,9 @@ int sdfiAssignRunNo(SDCMFILEINFO **sdcmfi_list, int nfiles)
   SDCMFILEINFO *sdfi, *sdfitmp;
   char *FirstFile;
   int FirstFileNo, n, nthfileperrun;
-  char *tmpstr;
+  // char *tmpstr;
 
-  tmpstr = NULL;
+  // tmpstr = NULL;
 
   nthfile = 0;
   nthrun = 0;
@@ -6285,7 +6293,6 @@ MRI *DICOMRead2(const char *dcmfile, int LoadVolume)
   env = FSENVgetenv();
 
   printf("Loading pixel data\n");
-  nvox = RefDCMInfo.Columns * RefDCMInfo.Rows;
 
   if (RefDCMInfo.BitsAllocated == 16 || RefDCMInfo.BitsAllocated == 8)
   {
@@ -7000,7 +7007,7 @@ unsigned char *DICOM16To8(unsigned short *v16, int nvox)
 
 int DICOMInfo2MRI(DICOMInfo *dcm, void *data, MRI *mri)
 {
-  long n, nvox;
+  long n;
   int i, j, k;
   unsigned char *data8;
   unsigned short *data16;
@@ -7011,7 +7018,7 @@ int DICOMInfo2MRI(DICOMInfo *dcm, void *data, MRI *mri)
   mri->width = dcm->Columns;
   mri->height = dcm->Rows;
   mri->depth = dcm->NumberOfFrames;
-  nvox = dcm->Rows * dcm->Columns * dcm->NumberOfFrames;
+  // nvox = dcm->Rows * dcm->Columns * dcm->NumberOfFrames;
 
   mri->fov = dcm->FieldOfView;
   mri->thick = dcm->SliceThickness;
@@ -7081,7 +7088,6 @@ int DICOMRead(const char *FileName, MRI **mri, int ReadImage)
   int numFiles;
   int inputIndex;
   int nextIndex;
-  int inputImageNumber;
   int *startIndices;
   int count;
 
@@ -7112,6 +7118,10 @@ int DICOMRead(const char *FileName, MRI **mri, int ReadImage)
 
   // scan directory
   error = ScanDir(PathName, &FileNames, &NumberOfFiles);
+  if (error)
+  {
+    fprintf(stderr, "ScanDir encountered an error\n");
+  }
 
   for (i = 0, NumberOfDICOMFiles = 0; i < NumberOfFiles; i++)
   {
@@ -7145,7 +7155,6 @@ int DICOMRead(const char *FileName, MRI **mri, int ReadImage)
   // a list of files which to make an output file.   Then use that
   // to print out the information.
   inputIndex = 0;
-  inputImageNumber = 1;
   count = 0;
   if (nStudies > 1)
   {
@@ -7168,7 +7177,6 @@ int DICOMRead(const char *FileName, MRI **mri, int ReadImage)
         if (!strcmp(FileName, aDicomInfo[i]->FileName))
         {
           inputIndex = i;
-          inputImageNumber = aDicomInfo[i]->ImageNumber;
         }
         // print starting filename for the studies
         if (i == 0)

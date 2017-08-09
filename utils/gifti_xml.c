@@ -1,7 +1,9 @@
-#include "gifti_io.h"
+
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "gifti_io.h"
 
 #define GXML_MIN_BSIZE 2048
 #define GXML_DEF_BSIZE 32768
@@ -174,6 +176,7 @@ static int g_first_zlib_err_msg = 1;
 
 /*--- Base64 binary encoding and decoding tables ---*/
 
+// clang-format off
 /* encoding: converting values 0-63 to characters */
 static unsigned char b64_encode_table[64]
     = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', /* 26 upper case */
@@ -455,6 +458,7 @@ static unsigned char b64_decode_table[256] = {
   128,
   128 /* 248 - 255 */
 };
+// clang-format on
 
 /* note: the buffer needs to be large enough to contain any contiguous
          piece of (CDATA?) text, o.w. it will require parsing in pieces */

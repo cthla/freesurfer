@@ -66,7 +66,10 @@ float getf(FILE *fp)
 {
   float f;
 
-  fread(&f, 4, 1, fp);
+  if (fread(&f, 4, 1, fp) != 1)
+  {
+    ErrorPrintf(ERROR_BADFILE, "getf: fread failed");
+  }
 #if (BYTE_ORDER == LITTLE_ENDIAN)
   f = swapFloat(f);
 #endif
@@ -185,9 +188,12 @@ double freadDouble(FILE *fp)
 
 int freadInt(FILE *fp)
 {
-  int i, nread;
+  int i;
 
-  nread = fread(&i, sizeof(int), 1, fp);
+  if (fread(&i, sizeof(int), 1, fp) != 1)
+  {
+    ErrorPrintf(ERROR_BADFILE, "freadInt: fread failed");
+  }
 #if (BYTE_ORDER == LITTLE_ENDIAN)
   i = swapInt(i);
 #endif
@@ -195,10 +201,12 @@ int freadInt(FILE *fp)
 }
 long long freadLong(FILE *fp)
 {
-  int nread;
   long long i;
 
-  nread = fread(&i, sizeof(long long), 1, fp);
+  if (fread(&i, sizeof(long long), 1, fp) != 1)
+  {
+    ErrorPrintf(ERROR_BADFILE, "freadLong: fread failed");
+  }
 #if (BYTE_ORDER == LITTLE_ENDIAN)
   i = swapLong64(i);
 #endif
@@ -207,15 +215,17 @@ long long freadLong(FILE *fp)
 
 short freadShort(FILE *fp)
 {
-  int nread;
   short s;
 
-  nread = fread(&s, sizeof(short), 1, fp);
+  if (fread(&s, sizeof(short), 1, fp) != 1)
+  {
+    ErrorPrintf(ERROR_BADFILE, "freadShort: fread failed");
+  }
+
 #if (BYTE_ORDER == LITTLE_ENDIAN)
   s = swapShort(s);
 #endif
-  if (nread != 1)
-    ErrorPrintf(ERROR_BADFILE, "freadShort: fread failed");
+
   return (s);
 }
 
@@ -440,9 +450,12 @@ double znzreadDouble(znzFile fp)
 
 int znzreadInt(znzFile fp)
 {
-  int i, nread;
+  int i;
 
-  nread = znzread(&i, sizeof(int), 1, fp);
+  if (znzread(&i, sizeof(int), 1, fp) != 1)
+  {
+    ErrorPrintf(ERROR_BADFILE, "znzreadInt: znzread failed");
+  }
 #if (BYTE_ORDER == LITTLE_ENDIAN)
   i = swapInt(i);
 #endif
@@ -451,10 +464,12 @@ int znzreadInt(znzFile fp)
 
 long long znzreadLong(znzFile fp)
 {
-  int nread;
   long long i;
 
-  nread = znzread(&i, sizeof(long long), 1, fp);
+  if (znzread(&i, sizeof(long long), 1, fp) != 1)
+  {
+    ErrorPrintf(ERROR_BADFILE, "znzreadLong: znzread failed");
+  }
 #if (BYTE_ORDER == LITTLE_ENDIAN)
   i = swapLong64(i);
 #endif
@@ -845,7 +860,10 @@ int fio_pushd(const char *dir)
     printf("ERROR: fio_pushd: maximum number of pushes reached\n");
     return (1);
   }
-  getcwd(fio_dirstack[fio_npushes], 1000);
+  if (!getcwd(fio_dirstack[fio_npushes], 1000))
+  {
+    printf("ERROR: getcwd: no path returned\n");
+  }
   err = chdir(dir);
   if (err)
   {
@@ -905,7 +923,10 @@ char *fio_fullpath(const char *fname)
     free(basename);
     return (NULL);
   }
-  getcwd(cwd, 1000);
+  if (!getcwd(cwd, 1000))
+  {
+    printf("ERROR: getcwd: no path returned\n");
+  }
   fio_popd();
 
   sprintf(cwd, "%s/%s", cwd, basename);

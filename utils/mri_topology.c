@@ -744,9 +744,9 @@ Nbh *reverseNbh(Nbh *nbh_src, Nbh *nbh_dst)
 //     Correct the topology of a volume working at the voxel scale
 //
 ///////////////////////////////////////////////////////////////////////
-//#ifndef SQR
+#ifndef SQR
 #define SQR(x) ((x) * (x))
-//#endif
+#endif
 
 typedef struct Cell {
   struct Cell *next, *previous;
@@ -2340,7 +2340,8 @@ static void guessSegmentation(TC_PARMS *parms)
   MRI *mri_seg;
   int width, height, depth, i, j, k, l, m, a, b, c, x, y, z, label;
   int xmin, ymin, zmin, xmax, ymax, zmax;
-  float ps, pcs, pis, pi, psi, pcsi;
+  float ps, pi, psi, pcsi;
+  // float pcs, pis;
   float intensity;
 
   double Ps1[NLABELS], Pis1[NLABELS], Psi1[NLABELS];
@@ -2462,7 +2463,7 @@ static void guessSegmentation(TC_PARMS *parms)
           }
         }
         ps = maxp1;
-        pcs = maxp2;
+        // pcs = maxp2;
         // compute p(i|s)
         maxp1 = 0;
         for (n = 0; n < nlabels1; n++)
@@ -2482,7 +2483,7 @@ static void guessSegmentation(TC_PARMS *parms)
               if (Pis2[n] > maxp2)
                 maxp2 = Pis2[n];
             }
-        pis = maxp1;
+        // pis = maxp1;
         // compute p(i)
         pi = 0.0f;
         for (l = 0; l < nlabels1; l++)
@@ -3228,13 +3229,14 @@ static int segmentVoxel(TC_PARMS *parms, MSV *pt)
   int nlabels = parms->nlabels, *border_labels = parms->border_labels;
   SEGMENTATION *segmentation = parms->segmentation, *seg;
   ConnectedComponent *cc;
-  int max, width, height, depth, nvox, x, y, z, label, a, b, c, val, sval, i, j, k, n;
+  int max, nvox, x, y, z, label, a, b, c, val, sval, i, j, k, n;
+  // int width, height, depth;
   MRI *mri_labeled = parms->mri_labeled, *mri_bin = parms->mri_bin;
   CCS *ccs = parms->ccs;
 
-  width = mri_labeled->width;
-  height = mri_labeled->height;
-  depth = mri_labeled->depth;
+  // width = mri_labeled->width;
+  // height = mri_labeled->height;
+  // depth = mri_labeled->depth;
 
   x = pt->x;
   y = pt->y;
@@ -3438,14 +3440,14 @@ static int segmentConnectedComponents(TC_PARMS *parms, Cell **list, int ncells)
   SEGMENTATION *segmentation = parms->segmentation;
   MRI *mri = parms->mri_bin, *mri_labeled = parms->mri_labeled;
   ConnectedComponent *cc;
-  int sum, x, y, z, width, height, depth, xi, yi, zi, xk, yk, zk, border_labels[27], nlabels, label, nvox, m,
-      connectivity, con, max;
+  int sum, x, y, z, xi, yi, zi, xk, yk, zk, border_labels[27], nlabels, label, nvox, m, con, max;
+  // int  width, height, depth, connectivity;
 
-  width = mri->width;
-  height = mri->height;
-  depth = mri->depth;
+  // width = mri->width;
+  // height = mri->height;
+  // depth = mri->depth;
 
-  connectivity = parms->c_c;
+  // connectivity = parms->c_c;
   con = 3;
   // modification florent 4th March!
   // con=connectivityNumber(connectivity);
@@ -3668,7 +3670,7 @@ static int findRCC(TC_PARMS *parms, int rcc)
 static int mergeRCC(TC_PARMS *parms, SEGMENTATION *segmentation)
 {
   int k, nrcccomponents, rcclabel, nlabels, maxlabels, *border_labels, *tmp, m;
-  ConnectedComponent *component;
+  // ConnectedComponent *component;
   int count;
 
   nrcccomponents = parms->segmentation->ncomponents;
@@ -3680,7 +3682,7 @@ static int mergeRCC(TC_PARMS *parms, SEGMENTATION *segmentation)
   {
     if (!parms->multiplemode && parms->verbose_mode)
       fprintf(stderr, "\r   iteration %5d:", nrcccomponents - k);
-    component = &parms->segmentation->components[k];
+    // component = &parms->segmentation->components[k];
     // analyze the current rcc with the ones, which indice is smaller
     rcclabel = 0;
     nlabels = 0;
@@ -4014,14 +4016,15 @@ static int findandRemoveComponents(TC_PARMS *parms)
 {
   CCS *ccs;
   ConnectedComponent *cc, *ncc;
-  MRI *mri = parms->mri_bin, *mri_labeled = parms->mri_labeled, *mri_prior, *mri_cost, *mri_dist;
+  MRI *mri = parms->mri_bin, *mri_labeled = parms->mri_labeled, *mri_prior, *mri_cost;
+  // MRI *mri_dist;
   int ref, k, n, x, y, z;
   int label;
   float threshold = parms->threshold;
   SEGMENTATION *seg;
   int check;
 
-  mri_dist = parms->mri_dist;
+  // mri_dist = parms->mri_dist;
 
   check = 1;
   if (parms->c_c == parms->b_c) // work on the foreground
@@ -4459,7 +4462,8 @@ static int correctSegmentation(TC_PARMS *parms)
 // Just need to add point without changing the topology
 static int finalConditionalExpansion(TC_PARMS *parms)
 {
-  int width, height, depth, n, label, ref, x, y, z, xinit, yinit, zinit, i, j, k, val;
+  int width, height, depth, n, ref, x, y, z, xinit, yinit, zinit, i, j, k, val;
+  // int label;
   int nlabels = parms->nblabels, *tab = parms->labels, test;
   ConnectedComponent *cc;
   MRI *mri_seg = parms->mri_seg, *mri = parms->mri_bin;
@@ -4474,7 +4478,7 @@ static int finalConditionalExpansion(TC_PARMS *parms)
   }
 
   parms->multiplemode = 0;
-  label = parms->labels[0];
+  // label = parms->labels[0];
   xinit = parms->region.x;
   yinit = parms->region.y;
   zinit = parms->region.z;

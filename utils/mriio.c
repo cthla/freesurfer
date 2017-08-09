@@ -44,6 +44,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "mri.h"
+
 #include "AFNI.h"
 #include "Bruker.h"
 #include "DICOMRead.h"
@@ -66,7 +68,6 @@
 #include "matrix.h"
 #include "mghendian.h"
 #include "minc_volume_io.h"
-#include "mri.h"
 #include "mri2.h"
 #include "mri_circulars.h"
 #include "mri_identify.h"
@@ -78,6 +79,7 @@
 #include "tags.h"
 #include "utils.h"
 #include "znzlib.h"
+
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif

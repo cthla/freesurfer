@@ -30,11 +30,12 @@
 #include "fsenv.h"
 #include "macros.h" // FEQUAL
 #include "mriTransform.h"
-#include "mriVolume.h"
 #include "mri_conform.h"
 #include "proto.h" // nint
 #include "xList.h"
 #include "xUtilities.h"
+
+#include "mriVolume.h"
 
 // should be in transform.h if they aren't already
 

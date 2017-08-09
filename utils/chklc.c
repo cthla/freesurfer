@@ -25,7 +25,7 @@
 #ifndef Darwin
 #include <gnu/libc-version.h>
 #endif
-#include "diag.h"
+
 #include <chklc.h>
 #include <const.h>
 #include <errno.h>
@@ -33,6 +33,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "diag.h"
 
 extern char *crypt(const char *, const char *);
 
@@ -165,10 +167,11 @@ void chklc(void)
     exit(-1);
   }
 
-  fscanf(lfile, "%s\n", email);
-  fscanf(lfile, "%s\n", magic);
-  fscanf(lfile, "%s\n", key);
-  fscanf(lfile, "%s\n", key2);
+  if (fscanf(lfile, "%s\n%s\n%s\n%s\n", email, magic, key, key2) != 4)
+  {
+    fprintf(stderr, "error parsing license file, expected 4 values\n");
+  }
+
   sprintf(gkey, "%s.%s", email, magic);
 
   if (Gdiag_no > 0 && first_time)
@@ -245,7 +248,8 @@ void chklc(void)
 //  which might not have a terminal window open, so we want a message to appear
 //  if the license check fails. The only way to do this is to either modify
 //  all existing calls to chklc throughout the code, or have separate license
-//  checking code for freeview. The first scares me, so Im going with the latter.
+//  checking code for freeview. The first scares me, so Im going with the
+//  latter.
 //
 //  Also there are difference with the way the FREESURFER_HOME environment variable
 //  is handled. It doesnt need to be defined for freeview to operate. So perhaps
@@ -352,10 +356,11 @@ int chklc2(char *msg)
     return 0;
   }
 
-  fscanf(lfile, "%s\n", email);
-  fscanf(lfile, "%s\n", magic);
-  fscanf(lfile, "%s\n", key);
-  fscanf(lfile, "%s\n", key2);
+  if (fscanf(lfile, "%s\n%s\n%s\n%s\n", email, magic, key, key2) != 4)
+  {
+    fprintf(stderr, "error parsing license file, expected 4 values\n");
+    return 0;
+  }
 
   sprintf(gkey, "%s.%s", email, magic);
 

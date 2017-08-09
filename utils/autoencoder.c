@@ -1,6 +1,7 @@
 /**
  * @file  autoencoder.c
- * @brief header file for creating and training a stacked autoencoder for feature extraction.
+ * @brief header file for creating and training a stacked autoencoder for
+feature extraction.
  *
 H.-C. Shin, M. R. Orton, D. J. Collins, S. J. Doran, and M. O. Leach,
 "Stacked Autoencoders for
@@ -113,7 +114,8 @@ static AE *AEalloc(AE *prev, int ninputs, int nhidden, int noutputs)
   if (ae == NULL)
     ErrorReturn(NULL, (ERROR_NOFILE, "AEaalloc(%d, %d): could not alloc ae", ninputs, nhidden));
 
-  // the input and ouptut layers for an AE is the hidden layer of the previous AE
+  // the input and ouptut layers for an AE is the hidden layer of the previous
+  // AE
   if (prev)
     ae->v_output = prev->v_hidden;
   else
@@ -1682,6 +1684,10 @@ int SAEwrite(SAE *sae, char *fname)
     ErrorReturn(ERROR_NOFILE, (ERROR_NOFILE, "SAEwrite(%s): could not open file", fname));
 
   n = fprintf(fp, "%d %d %lf %d %d\n", sae->whalf, sae->nencoders, sae->scale, sae->type, sae->nlevels);
+  if (n != 5)
+  {
+    fprintf(stderr, "File(%s) Warning: expected number of values to read does not match those read\n", fname);
+  }
   writeVolGeom(fp, &sae->vg);
   AEwrite(sae->first, fp);
   ae = sae->first;
@@ -1743,6 +1749,11 @@ SAE *SAEread(char *fname)
     ErrorReturn(NULL, (ERROR_NOFILE, "SAEread(%s): could not open file", fname));
 
   n = fscanf(fp, "%d %d %lf %d %d\n", &whalf, &nencoders, &scale, &type, &nlevels);
+  if (n != 5)
+  {
+    fprintf(stderr, "File(%s) Warning: expected number of values to read does not match those read\n", fname);
+  }
+
   sae = SAEalloc(whalf, nlevels, type, scale);
   readVolGeom(fp, &sae->vg);
   sae->nencoders = nencoders;
@@ -1885,7 +1896,8 @@ int CSAEfillInputs(CSAE *csae, MRI *mri_inputs, VECTOR *v_visible, int x0, int y
 }
 MRI *CSAEcreateOutputs(CSAE *csae, MRI *mri_inputs, int first_layer, int last_layer)
 {
-  int layer, x, y, z, h, whalf;
+  int layer, x, y, z, h;
+  // int whalf;
   MRI *mri_layer_inputs, *mri_outputs = NULL;
   AE *ae, *next;
   static int callno = 0;
@@ -1895,7 +1907,7 @@ MRI *CSAEcreateOutputs(CSAE *csae, MRI *mri_inputs, int first_layer, int last_la
   {
     ae = csae->aes[layer];
     mri_outputs = csae->mri_outputs[layer];
-    whalf = (ae->ksize - 1) / 2;
+    // whalf = (ae->ksize - 1) / 2;
     for (x = 0; x < mri_inputs->width; x++)
     {
       if (x && !(x % 100))
@@ -1923,11 +1935,11 @@ AE *CSAEaddLayer(CSAE *csae, int ksize, int nhidden)
 {
   AE *ae, *last;
   int ninputs;
-  float scale;
+  // float scale;
 
   last = SAEfindLastLayer(csae->sae, csae->sae->first);
   ninputs = ksize * ksize * last->v_hidden_bias->rows;
-  scale = ninputs / nhidden;
+  // scale = ninputs / nhidden;
   ae = AEalloc(last, ninputs, nhidden, ninputs);
   ae->ksize = ksize;
   printf("stacked layer #%d added with %d hidden units\n", csae->sae->nencoders, nhidden);

@@ -156,7 +156,7 @@ int RFAsourceVoxelToNode(
 {
   float xt, yt, zt;
   double xrt, yrt, zrt, xd, yd, zd;
-  int retval;
+  // int retval;
 
   LTA *lta;
   if (transform->type != MORPH_3D_TYPE)
@@ -183,8 +183,8 @@ int RFAsourceVoxelToNode(
   *py = (int)(yd);
   *pz = (int)(zd);
 
-  if (*px < 0 || *py < 0 || *pz < 0 || *px >= rfa->width || *py >= rfa->height || *pz >= rfa->depth)
-    retval = (ERROR_BADPARM);
+  // if (*px < 0 || *py < 0 || *pz < 0 || *px >= rfa->width || *py >= rfa->height || *pz >= rfa->depth)
+  //   retval = (ERROR_BADPARM);
   if (*px < 0)
     *px = 0;
   if (*py < 0)
@@ -582,16 +582,20 @@ RFA *RFAread(char *fname)
   fp = fopen(fname, "r");
   if (!fp)
     ErrorReturn(NULL, (ERROR_BADPARM, "RFAwrite(%s): could not open file", fname));
-  fscanf(fp,
-         "%d %d %d %d %d %d %d %f\n",
-         &total_training,
-         &parms.wsize,
-         &nfeatures,
-         &parms.wsize,
-         &parms.width,
-         &parms.height,
-         &parms.depth,
-         &parms.spacing);
+  if (fscanf(fp,
+             "%d %d %d %d %d %d %d %f\n",
+             &total_training,
+             &parms.wsize,
+             &nfeatures,
+             &parms.wsize,
+             &parms.width,
+             &parms.height,
+             &parms.depth,
+             &parms.spacing)
+      != 8)
+  {
+    ErrorPrintf(ERROR_BAD_FILE, "RFAwrite: could not read file");
+  }
 
   parms.width *= parms.spacing;
   parms.height *= parms.spacing;
@@ -620,13 +624,27 @@ RFA *RFAread(char *fname)
           ErrorExit(ERROR_NOMEMORY, "could not reallocate %d node priors @(%d %d %d)", node->max_labels, xn, yn, zn);
         for (n = 0; n < node->nlabels; n++)
         {
-          fscanf(fp, "%d ", &label);
+          if (fscanf(fp, "%d ", &label) != 1)
+          {
+            ErrorPrintf(ERROR_BAD_FILE, "RFAwrite: could not read file");
+          }
           node->labels[n] = label;
         }
-        fscanf(fp, "\n");
+        if (fscanf(fp, "\n") != 0)
+        {
+          ErrorPrintf(ERROR_BAD_FILE, "RFAwrite: could not read file");
+        }
         for (n = 0; n < node->nlabels; n++)
-          fscanf(fp, "%f ", &node->label_priors[n]);
-        fscanf(fp, "\n");
+        {
+          if (fscanf(fp, "%f ", &node->label_priors[n]) != 1)
+          {
+            ErrorPrintf(ERROR_BAD_FILE, "RFAwrite: could not read file");
+          }
+        }
+        if (fscanf(fp, "\n") != 0)
+        {
+          ErrorPrintf(ERROR_BAD_FILE, "RFAwrite: could not read file");
+        }
         node->max_labels = node->nlabels;
         if (node->nlabels > 1)
         {

@@ -1347,7 +1347,8 @@ double *ComputeBrainVolumeStats(char *subject, char *suffix, char *sdir)
   eSTV = lhCtxGMCount + rhCtxGMCount + lhCtxWMCount + rhCtxWMCount + SubCortGMVol + VentChorVol + VesselVol;
   eSTVnv = lhCtxGMCount + rhCtxGMCount + lhCtxWMCount + rhCtxWMCount + SubCortGMVol + VesselVol;
 
-  // Estimated BrainSegVolume - mostly a comparison between surface- and volume-based
+  // Estimated BrainSegVolume - mostly a comparison between surface- and
+  // volume-based
   eBSV = eSTV + CerebellumVol + CSFVol + OptChiasmVol;
 
   // Surface-based est of brainseg not vent
@@ -1482,7 +1483,8 @@ MRI *MRIseg2TissueType(MRI *seg, COLOR_TABLE *ct, MRI *tt)
 }
 
 /*!
-  \fn MRI *MRIextractTissueTypeSeg(MRI *seg, COLOR_TABLE *ct, int tt, MRI *ttseg)
+  \fn MRI *MRIextractTissueTypeSeg(MRI *seg, COLOR_TABLE *ct, int tt, MRI
+  *ttseg)
   \brief Creates a volume with only the segmentations in the given tissue type.
   Tissue type info in the ctab.
 */
@@ -1617,8 +1619,10 @@ MRI **MRIdilateSegWithinTT(MRI *seg, int nDils, COLOR_TABLE *ct, MRI **r)
 }
 
 /*!
-  \fn int Seg2NbrNonBrainWrapper(char *subject, char *segname, char *ctab, char *statname, double threshmm)
-  \brief Wrapper around Seg2NbrNonBrain() that operates on the FS directory structure and performs
+  \fn int Seg2NbrNonBrainWrapper(char *subject, char *segname, char *ctab, char
+  *statname, double threshmm)
+  \brief Wrapper around Seg2NbrNonBrain() that operates on the FS directory
+  structure and performs
   GTMdefaultSegReplacmentList(). Writes out stats.
 */
 int Seg2NbrNonBrainWrapper(char *subject, char *segname, COLOR_TABLE *ctab, char *statname, double threshmm)

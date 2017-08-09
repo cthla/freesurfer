@@ -348,12 +348,13 @@ static int freeTesselationParms(tesselation_parms **parms)
 {
   int j, k;
   tesselation_parms *tmp = *parms;
-  int depth, width, height;
+  int depth, height;
+  // int width;
   MRI *mri = tmp->mri;
 
   depth = mri->depth;
   height = mri->height;
-  width = mri->width;
+  // width = mri->width;
 
   for (k = 0; k < depth; k++)
   {
@@ -525,17 +526,17 @@ static int saveTesselation(tesselation_parms *parms)
   VERTEX *vertex;
   FACE *face;
   float x, y, z, xhi, xlo, yhi, ylo, zhi, zlo;
-  float st, ps, xx1, yy0, zz1;
+  // float st, ps, xx1, yy0, zz1;
   float j, i, imnr;
   double xw, yw, zw;
 
   /*necessary for the coord transformation*/
-  ps = parms->mri->ps;
-  st = parms->mri->thick;
+  // ps = parms->mri->ps;
+  // st = parms->mri->thick;
 
-  yy0 = parms->mri->ystart;
-  xx1 = parms->mri->xend;
-  zz1 = parms->mri->zend;
+  // yy0 = parms->mri->ystart;
+  // xx1 = parms->mri->xend;
+  // zz1 = parms->mri->zend;
 
   mris = MRISoverAlloc(
       pct_over * parms->vertex_index, pct_over * 2 * parms->face_index, parms->vertex_index, 2 * parms->face_index);
@@ -1041,7 +1042,8 @@ static int computeconnectedcomponents(CNBH *tab)
 
 static void make_surface_with_connectivity(tesselation_parms *parms)
 {
-  int imnr, i, j, k, f_pack, v_ind, f, a, b, c, label, nlabels, comp, m;
+  int imnr, i, j, k, f_pack, v_ind, f, a, b, c, nlabels, comp, m;
+  // int  label;
   int n, slcx, slcy, slcz, indx, indy, indz;
   CNBH tab;
   double threshold, val;
@@ -1103,7 +1105,7 @@ static void make_surface_with_connectivity(tesselation_parms *parms)
               MRIvox(mri, i, j, k) = 0;
 
     allocateTesselation(parms);
-    label = parms->current_label;
+    // label = parms->current_label;
 
     for (imnr = parms->zmin; imnr <= parms->zmax + 1; imnr++)
       for (slcz = -1; slcz < 1; slcz++)

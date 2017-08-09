@@ -2102,11 +2102,11 @@ MRI *MRImeanByte(MRI *mri_src, MRI *mri_dst, int wsize)
 MRI *MRImeanInMask(MRI *mri_src, MRI *mri_dst, MRI *mri_mask, int wsize)
 {
   int width, height, depth, whalf, num;
-  float wcubed;
+  // float wcubed;
   int x, y, z, x0, y0, z0;
   float val;
 
-  wcubed = (float)(wsize * wsize * wsize);
+  // wcubed = (float)(wsize * wsize * wsize);
   whalf = wsize / 2;
   width = mri_src->width;
   height = mri_src->height;
@@ -2259,9 +2259,9 @@ MRI *MRIstdInMask(MRI *mri_src, MRI *mri_dst, MRI *mri_mean, MRI *mri_mask, int 
 MRI *MRImean(MRI *mri_src, MRI *mri_dst, int wsize)
 {
   int width, height, depth, whalf;
-  float wcubed;
+  // float wcubed;
 
-  wcubed = (float)(wsize * wsize * wsize);
+  // wcubed = (float)(wsize * wsize * wsize);
   whalf = (wsize - 1) / 2;
   width = mri_src->width;
   height = mri_src->height;
@@ -2878,7 +2878,8 @@ MRIconvolveGaussian() - see also MRIgaussianSmooth();
 ------------------------------------------------------*/
 MRI *MRIconvolveGaussian(MRI *mri_src, MRI *mri_dst, MRI *mri_gaussian)
 {
-  int width, height, depth, klen;
+  // int width, height, depth;
+  int klen;
 #ifndef FS_CUDA
   int frame;
   MRI *mtmp1, *mri_tmp;
@@ -2898,9 +2899,9 @@ MRI *MRIconvolveGaussian(MRI *mri_src, MRI *mri_dst, MRI *mri_gaussian)
 
   kernel = &MRIFvox(mri_gaussian, 0, 0, 0);
   klen = mri_gaussian->width;
-  width = mri_src->width;
-  height = mri_src->height;
-  depth = mri_src->depth;
+  // width = mri_src->width;
+  // height = mri_src->height;
+  // depth = mri_src->depth;
 
   if (!mri_dst)
   {
@@ -3290,12 +3291,13 @@ MRI *MRIreduce(MRI *mri_src, MRI *mri_dst)
 
 MRI *MRIreduce2D(MRI *mri_src, MRI *mri_dst)
 {
-  int width, height, depth;
+  int width, height;
+  // int depth;
   MRI *mtmp1;
 
   width = mri_src->width;
   height = mri_src->height;
-  depth = mri_src->depth;
+  // depth = mri_src->depth;
 
   if (width <= 1 || height <= 1)
     ErrorExit(ERROR_BADPARM, "MRIreduce2D: insufficient dimension (%d, %d)", width, height);
@@ -4641,7 +4643,8 @@ MRI *MRInxcorrWindow(MRI *mri_ref, MRI *mri_in, MRI *mri_dst, int window_size)
   int width, height, depth, xoff, yoff, zoff, x0, y0, z0, kx, ky, kz, kxend, whalf, x, y, z, dst_width, dst_height,
       dst_depth;
   BUFTYPE *pref, *pin, ref, in;
-  float dst, norm, *pdst;
+  float dst, norm;
+  // float *pdst;
 
   if (!mri_dst)
   {
@@ -4680,7 +4683,7 @@ MRI *MRInxcorrWindow(MRI *mri_ref, MRI *mri_in, MRI *mri_dst, int window_size)
   {
     for (yoff = -whalf; yoff <= whalf; yoff++)
     {
-      pdst = &MRIFvox(mri_dst, x0 - whalf, y0 + yoff, z0 + zoff);
+      // pdst = &MRIFvox(mri_dst, x0 - whalf, y0 + yoff, z0 + zoff);
       for (xoff = -whalf; xoff <= whalf; xoff++)
       {
         /* apply offset template (ref) to input */
@@ -5208,12 +5211,13 @@ MRI *MRImarkBorderVoxels(MRI *mri_src, MRI *mri_dst)
 
 int MRIborderClassifyVoxel(MRI *mri_src, MRI *mri_labeled, int wsize, int x, int y, int z, float *ppw, float *ppg)
 {
-  int width, height, depth, xk, yk, zk, xi, yi, zi, nw, ng, whalf, val;
+  int xk, yk, zk, xi, yi, zi, nw, ng, whalf, val;
+  // int width, height, depth;
   float wvar, wmean, gvar, gmean, wsq, gsq, pg, pw, dist, ptotal;
 
-  width = mri_src->width;
-  height = mri_src->height;
-  depth = mri_src->depth;
+  // width = mri_src->width;
+  // height = mri_src->height;
+  // depth = mri_src->depth;
   whalf = (wsize - 1) / 2;
   wvar = wmean = gvar = gmean = wsq = gsq = 0.0;
   nw = ng = 0;
@@ -5450,7 +5454,8 @@ int MRIreclassify(MRI *mri_src, MRI *mri_labeled, MRI *mri_dst, float wm_low, fl
 int MRIclassifyAmbiguous(MRI *mri_src, MRI *mri_labeled, MRI *mri_border, MRI *mri_dst, int wsize)
 {
   int x, y, z, width, height, depth, nw, ng, nchanged, ntested;
-  BUFTYPE *psrc, *plabeled, *pdst, label, new_label;
+  BUFTYPE *plabeled, *pdst, label, new_label;
+  // BUFTYPE *psrc;
 
   if (!mri_dst)
   {
@@ -5466,7 +5471,7 @@ int MRIclassifyAmbiguous(MRI *mri_src, MRI *mri_labeled, MRI *mri_border, MRI *m
     DiagShowPctDone((float)(z) / (float)(depth - 1), 5);
     for (y = 0; y < height; y++)
     {
-      psrc = &MRIvox(mri_src, 0, y, z);
+      // psrc = &MRIvox(mri_src, 0, y, z);
       pdst = &MRIvox(mri_dst, 0, y, z);
       plabeled = &MRIvox(mri_labeled, 0, y, z);
       for (x = 0; x < width; x++)

@@ -23,6 +23,10 @@
  *
  */
 
+#include <stdio.h>
+
+#include "mri.h"
+
 #include "mincutils.h"
 #include "mri.h"
 #include <stdio.h>

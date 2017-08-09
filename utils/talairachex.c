@@ -386,7 +386,8 @@ MRI *MRIextractTalairachPlaneEx(MRI *mri_src, MRI *mri_dst, int orientation, int
 {
   double e1_x, e1_y, e1_z, e2_x, e2_y, e2_z, xbase, ybase, zbase;
   int whalf, xk, yk, xi, yi, zi;
-  double ex, ey, ez, len, x0, y0, z0;
+  double ex, ey, ez, x0, y0, z0;
+  // double len;
 
   whalf = (wsize - 1) / 2;
 
@@ -470,10 +471,10 @@ MRI *MRIextractTalairachPlaneEx(MRI *mri_src, MRI *mri_dst, int orientation, int
     break;
   }
   // calculate the length of the vector in x direction
-  len = sqrt(e1_x * e1_x + e1_y * e1_y + e1_z * e1_z);
+  // len = sqrt(e1_x * e1_x + e1_y * e1_y + e1_z * e1_z);
   /*  e1_x /= len ; e1_y /= len ; e1_z /= len ;*/
   // calculate the length of the vector in y direction
-  len = sqrt(e2_x * e2_x + e2_y * e2_y + e2_z * e2_z);
+  // len = sqrt(e2_x * e2_x + e2_y * e2_y + e2_z * e2_z);
   /*  e2_x /= len ; e2_y /= len ; e2_z /= len ;*/
 
   for (yk = -whalf; yk <= whalf; yk++)
@@ -499,7 +500,8 @@ int MRIeraseTalairachPlaneNewEx(
 {
   double e1_x, e1_y, e1_z, e2_x, e2_y, e2_z, xbase, ybase, zbase;
   int whalf, xk, yk, xi, yi, zi, xki, yki, x0, y0;
-  double ex, ey, ez, len, xt0, yt0, zt0;
+  double ex, ey, ez, xt0, yt0, zt0;
+  // double len;
 
   whalf = (wsize - 1) / 2;
 
@@ -572,9 +574,9 @@ int MRIeraseTalairachPlaneNewEx(
      don't want to normalize basis - they are orthonormal in magnet space,
      not necessarily Talairach space.
   */
-  len = sqrt(e1_x * e1_x + e1_y * e1_y + e1_z * e1_z);
+  // len = sqrt(e1_x * e1_x + e1_y * e1_y + e1_z * e1_z);
   /*  e1_x /= len ; e1_y /= len ; e1_z /= len ;*/
-  len = sqrt(e2_x * e2_x + e2_y * e2_y + e2_z * e2_z);
+  // len = sqrt(e2_x * e2_x + e2_y * e2_y + e2_z * e2_z);
   /*  e2_x /= len ; e2_y /= len ; e2_z /= len ;*/
 
   for (yk = -whalf; yk <= whalf; yk++)

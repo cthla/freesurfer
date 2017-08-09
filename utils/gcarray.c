@@ -471,7 +471,8 @@ MRI *GCarrayClassify(GCARRAY *gcarray, MRI *mri_src, MRI *mri_dst, float conf, M
 {
   MATRIX *m_inputs;
   GCLASSIFY *gc;
-  int x, y, z, xc, yc, zc, width, depth, height, scale, classno, nclasses, swidth, sheight, sdepth;
+  int x, y, z, xc, yc, zc, width, depth, height, scale, classno, swidth, sheight, sdepth;
+  // int  nclasses;
   BUFTYPE *psrc, src, *pdst, *pclasses;
   float *pzscore, prob, *pprobs = NULL;
   double xt, yt, zt, xv, yv, zv;
@@ -497,7 +498,7 @@ MRI *GCarrayClassify(GCARRAY *gcarray, MRI *mri_src, MRI *mri_dst, float conf, M
   sheight = mri_src->height;
   sdepth = mri_src->depth;
   scale = gcarray->scale;
-  nclasses = NCLASSES;
+  // nclasses = NCLASSES;
 
   /*
      x, y, and z are in the MR image space. To get the appropriate classifier
@@ -849,7 +850,8 @@ int GCarrayUpdateMeans(GCARRAY *gcarray, MRI *mris[], MRI *mri_target, int nimag
 {
   GCLASSIFY *gc;
   GCLASS *gcl;
-  int x, y, z, xc, yc, zc, width, depth, height, scale, classno, nclasses, swidth, sheight, sdepth, overlap;
+  int x, y, z, xc, yc, zc, width, depth, height, scale, classno, swidth, sheight, sdepth;
+  // int nclasses, overlap;
   BUFTYPE *psrc, *ptarget, src, target;
   float *pzscore;
   double xt, yt, zt, xv, yv, zv;
@@ -858,12 +860,12 @@ int GCarrayUpdateMeans(GCARRAY *gcarray, MRI *mris[], MRI *mri_target, int nimag
   mri_src = mris[0];
 
   scale = gcarray->scale;
-  overlap = MAX(1, scale / 4);
+  // overlap = MAX(1, scale / 4);
 
   width = gcarray->width;
   height = gcarray->height;
   depth = gcarray->depth;
-  nclasses = NCLASSES;
+  // nclasses = NCLASSES;
 
   swidth = mri_src->width;
   sheight = mri_src->height;
@@ -954,7 +956,8 @@ int GCarrayUpdateCovariances(GCARRAY *gcarray, MRI *mris[], MRI *mri_target, int
 {
   GCLASSIFY *gc;
   GCLASS *gcl;
-  int x, y, z, xc, yc, zc, width, depth, height, scale, classno, nclasses, swidth, sheight, sdepth, overlap, col, row;
+  int x, y, z, xc, yc, zc, width, depth, height, scale, classno, swidth, sheight, sdepth, col, row;
+  // int nclasses, overlap;
   BUFTYPE *psrc, *ptarget, src, target;
   float *pzscore, obs[6], covariance;
   double xt, yt, zt, xv, yv, zv;
@@ -963,12 +966,12 @@ int GCarrayUpdateCovariances(GCARRAY *gcarray, MRI *mris[], MRI *mri_target, int
   mri_src = mris[0];
 
   scale = gcarray->scale;
-  overlap = MAX(1, scale / 4);
+  // overlap = MAX(1, scale / 4);
 
   width = gcarray->width;
   height = gcarray->height;
   depth = gcarray->depth;
-  nclasses = NCLASSES;
+  // nclasses = NCLASSES;
 
   swidth = mri_src->width;
   sheight = mri_src->height;
