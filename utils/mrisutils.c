@@ -31,6 +31,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "mri.h"
+#include "mrisurf.h"
+
 #include "annotation.h"
 #include "chklc.h"
 #include "cma.h"
@@ -43,17 +46,16 @@
 #include "icosahedron.h"
 #include "macros.h"
 #include "matrix.h"
-#include "mri.h"
 #include "mri_identify.h"
 #include "mrisegment.h"
 #include "mrishash.h"
-#include "mrisurf.h"
-#include "mrisutils.h"
 #include "proto.h"
 #include "sig.h"
 #include "stats.h"
 #include "timer.h"
 #include "tritri.h"
+
+#include "mrisutils.h"
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
@@ -1773,7 +1775,8 @@ double MRISvolumeInSurf(MRIS *mris)
   \brief Compute vertex-wise volume based on dividing each obliquely truncated
   trilateral pyramid into three tetrahedra. Based on Anderson M. Winkler's
   srf2vol matlab script.
-  \params w is white surface, p is pial. Output is an MRI struct of size nvertices
+  \params w is white surface, p is pial. Output is an MRI struct of size
+  nvertices
  */
 MRI *MRISvolumeTH3(MRIS *w, MRIS *p, MRI *vol, MRI *mask, double *totvol)
 {
@@ -1827,14 +1830,16 @@ MRI *MRISvolumeTH3(MRIS *w, MRIS *p, MRI *vol, MRI *mask, double *totvol)
     Cw->rptr[2][1] = w->vertices[v3].y;
     Cw->rptr[3][1] = w->vertices[v3].z;
 
-    // As the Ap is the common vertex for all three, it can be used as the origin.
+    // As the Ap is the common vertex for all three, it can be used as the
+    // origin.
     Bp = MatrixSubtract(Bp, Ap, Bp);
     Cp = MatrixSubtract(Cp, Ap, Cp);
     Aw = MatrixSubtract(Aw, Ap, Aw);
     Bw = MatrixSubtract(Bw, Ap, Bw);
     Cw = MatrixSubtract(Cw, Ap, Cw);
 
-    // The next lines compute the volume for each, using a scalar triple product:
+    // The next lines compute the volume for each, using a scalar triple
+    // product:
     C1 = VectorCrossProduct(Bw, Cw, C1);
     T1 = fabs(V3_DOT(Aw, C1));
 
@@ -2018,7 +2023,8 @@ LABEL *MRIScortexLabel(MRI_SURFACE *mris, MRI *mri_aseg, int min_vertices)
     if (adjacent && (double)nvox / (double)total_vox > 0.5) // more than 50% putamen
       v->marked = 0;
 
-    if (v->marked) // check to see if there is any cortical gm in the region in aseg
+    if (v->marked) // check to see if there is any cortical gm in the region in
+                   // aseg
     {
       int whalf, lh, rh;
       whalf = 5;
@@ -2031,7 +2037,9 @@ LABEL *MRIScortexLabel(MRI_SURFACE *mris, MRI *mri_aseg, int min_vertices)
       {
         v->marked = 0;
         if (vno == Gdiag_no)
-          printf("no cortical GM found in vicinity - removing %d  vertex from cortex\n", vno);
+          printf("no cortical GM found in vicinity - removing %d  vertex from "
+                 "cortex\n",
+                 vno);
       }
     }
   }
@@ -2356,7 +2364,8 @@ MRI *MRIScomputeFlattenedVolume(MRI_SURFACE *mris,
   mri_counts = MRIalloc(width, height, nsamples, MRI_INT);
 
   /*
-    the first frame of mri_vno contains the # of vertices mapped to that (i,j) position, then
+    the first frame of mri_vno contains the # of vertices mapped to that (i,j)
+    position, then
     the subsequent frames contain the vertex numbers
   */
   mri_vno = MRIalloc(width, height, nsamples, MRI_INT);
@@ -2421,7 +2430,8 @@ MRI *MRIScomputeFlattenedVolume(MRI_SURFACE *mris,
       dx /= norm;
       dy /= norm;
       dz /= norm;    // make it unit length
-      if (normalize) // divide the ribbon at this point into equally spaced samples
+      if (normalize) // divide the ribbon at this point into equally spaced
+                     // samples
       {
         norm = (sqrt(SQR(v0->pialx - v0->whitex) + SQR(v0->pialy - v0->whitey) + SQR(v0->pialz - v0->whitez))
                 + sqrt(SQR(v1->pialx - v1->whitex) + SQR(v1->pialy - v1->whitey) + SQR(v1->pialz - v1->whitez))
@@ -2440,7 +2450,8 @@ MRI *MRIScomputeFlattenedVolume(MRI_SURFACE *mris,
       x = MRISsampleFace(mris, fno, FLATTENED_VERTICES, xf, yf, 0, v0->whitex, v1->whitex, v2->whitex);
       y = MRISsampleFace(mris, fno, FLATTENED_VERTICES, xf, yf, 0, v0->whitey, v1->whitey, v2->whitey);
       z = MRISsampleFace(mris, fno, FLATTENED_VERTICES, xf, yf, 0, v0->whitez, v1->whitez, v2->whitez);
-      nv = MRIgetVoxVal(mri_vno, u, v, 0, 0); // # of vertices mapped to this location
+      nv = MRIgetVoxVal(mri_vno, u, v, 0,
+                        0); // # of vertices mapped to this location
       vno = v0 - mris->vertices;
       for (w = 0; w < nv; w++)
       {
@@ -2451,7 +2462,8 @@ MRI *MRIScomputeFlattenedVolume(MRI_SURFACE *mris,
       }
       MRIsetVoxVal(mri_vno, u, v, nv + 1, 0, vno);
       if (w == nv)
-        MRIsetVoxVal(mri_vno, u, v, 0, 0, nv + 1); // increment # of vertices mapping here
+        MRIsetVoxVal(mri_vno, u, v, 0, 0,
+                     nv + 1); // increment # of vertices mapping here
 
       x -= dx * wm_dist;
       y -= dy * wm_dist;
@@ -2486,7 +2498,8 @@ MRI *MRIScomputeFlattenedVolume(MRI_SURFACE *mris,
     printf("writing vertex numbers to %s\n", fname);
     MRIwrite(mri_vno, fname);
   }
-// fill in holes in the flatmap where no vertices mapped by averaging with neighboring filled locations
+// fill in holes in the flatmap where no vertices mapped by averaging with
+// neighboring filled locations
 #define MAX_ITERS 50
   for (num = 0; num < MAX_ITERS; num++)
   {
@@ -2584,7 +2597,8 @@ MRI *MRIScomputeFlattenedVolume(MRI_SURFACE *mris,
   Example 2:
     subjlist[0] = "s02.ghent";subjlist[1] = "s05.ghent";
     hemilist[0] = "rh";  hemilist[1] = "lh";
-    mrisp_template=MRISmakeTemplate(2, subjlist, 2, hemilist, "sphere.left_right");
+    mrisp_template=MRISmakeTemplate(2, subjlist, 2, hemilist,
+  "sphere.left_right");
 */
 MRI_SP *MRISmakeTemplate(int nsubjects, char **subjlist, int nhemis, char **hemilist, char *surfregname)
 {
@@ -2701,7 +2715,8 @@ int MRISsetPialUnknownToWhite(const MRIS *white, MRIS *pial)
 
   if (white->ct == NULL && pial->ct == NULL)
   {
-    printf("MRISsetPialUnknownToWhite(): neither white nor pial have an annotation\n");
+    printf("MRISsetPialUnknownToWhite(): neither white nor pial have an "
+           "annotation\n");
     return (1);
   }
 
@@ -2854,7 +2869,8 @@ int MRISscanner2Tkr(MRIS *mris)
 }
 
 /*!
-  \fn int ComputeMRISvolumeTH3(char *subject, char *hemi, int DoMask, char *outfile)
+  \fn int ComputeMRISvolumeTH3(char *subject, char *hemi, int DoMask, char
+  *outfile)
   \brief Computes and saves the vertex-wise volume of cortex using TH3.
  */
 int ComputeMRISvolumeTH3(char *subject, char *hemi, int DoMask, char *outfile)
@@ -2915,7 +2931,8 @@ int ComputeMRISvolumeTH3(char *subject, char *hemi, int DoMask, char *outfile)
 }
 
 /*!
-  \fn int L2SaddPoint(LABEL2SURF *l2s, double col_or_vno, double row, double slice, int PointType, int Operation)
+  \fn int L2SaddPoint(LABEL2SURF *l2s, double col_or_vno, double row, double
+  slice, int PointType, int Operation)
 
   \brief Adds (Operation==1) or removes (Operation!=1) a voxel or a
   vertex from a label based on its proximity to a surface. If
@@ -3145,10 +3162,13 @@ int L2SaddPoint(LABEL2SURF *l2s, double col, double row, double slice, int Point
         v.z = l2s->surfs[nmin]->vertices[vtxno].tz;
         if (nthhop != 0)
         {
-          // have to allow nthhop=0 because the closest vertex may be outside of the
+          // have to allow nthhop=0 because the closest vertex may be outside of
+          // the
           // voxel, depending upon the distance threshold
-          // but could also use this to ignore dist thresh and force the source vtx
-          // to be inside the voxel. but maybe better to do this before even starting
+          // but could also use this to ignore dist thresh and force the source
+          // vtx
+          // to be inside the voxel. but maybe better to do this before even
+          // starting
           // the hops?
           if (fabs(v.x - col) > 0.501 || fabs(v.y - row) > 0.501 || fabs(v.z - slice) > 0.501)
             continue;
@@ -3168,7 +3188,8 @@ int L2SaddPoint(LABEL2SURF *l2s, double col, double row, double slice, int Point
           continue; // already there
         // If it gets here, then add the vertex
         if (l2s->debug)
-          printf("Adding surf=%d hop=%d vtxno=%d  np=%5d   %g %g %g   (%5.2f %5.2f %5.2f)\n",
+          printf("Adding surf=%d hop=%d vtxno=%d  np=%5d   %g %g %g   (%5.2f "
+                 "%5.2f %5.2f)\n",
                  nmin,
                  nthhop,
                  vtxno,
@@ -3219,10 +3240,14 @@ int L2SaddPoint(LABEL2SURF *l2s, double col, double row, double slice, int Point
       }
     }
 
-    // If it has gone through a ring and not gotten a hit (nhits==0), then future hits
-    // will not be contiguous with the current label. This can happen if the surface
-    // folds back into the voxel. This can easily happen in fMRI-sized voxels. It is not
-    // clear how this should be handled, so I put l2s->DilateContiguous into the structure
+    // If it has gone through a ring and not gotten a hit (nhits==0), then
+    // future hits
+    // will not be contiguous with the current label. This can happen if the
+    // surface
+    // folds back into the voxel. This can easily happen in fMRI-sized voxels.
+    // It is not
+    // clear how this should be handled, so I put l2s->DilateContiguous into the
+    // structure
     // to allow or forbid disconinuous labels.
     if (l2s->DilateContiguous && nhits == 0)
       break;
@@ -3389,8 +3414,10 @@ int L2Sinit(LABEL2SURF *l2s)
   MatrixFree(&ras);
   MatrixFree(&crs);
 
-  // Take a stab at automatically computing the maximum number of hops. The basic
-  // idea is to scale the number based upon the voxel size. The 3 is just something
+  // Take a stab at automatically computing the maximum number of hops. The
+  // basic
+  // idea is to scale the number based upon the voxel size. The 3 is just
+  // something
   // I guessed.
   if (l2s->nhopsmax == -1)
     l2s->nhopsmax = 3
@@ -3451,11 +3478,16 @@ int L2Sfree(LABEL2SURF **pl2s)
 }
 
 /*!
-  \fn int L2SaddVoxel(LABEL2SURF *l2s, double col, double row, double slice, int nsegs, int Operation)
-  \brief Divides the voxel into nsegs parts and then runs L2SaddPoint(). This is an
-  alternative way to include vertices inside the voxel that are not necessarily the closest
-  vertex. The problem is that it adds any vertex regardless of how far away it is along the
-  surface from the center vertex. L2SaddPoint() has a built-in mechanism for solving this
+  \fn int L2SaddVoxel(LABEL2SURF *l2s, double col, double row, double slice, int
+  nsegs, int Operation)
+  \brief Divides the voxel into nsegs parts and then runs L2SaddPoint(). This is
+  an
+  alternative way to include vertices inside the voxel that are not necessarily
+  the closest
+  vertex. The problem is that it adds any vertex regardless of how far away it
+  is along the
+  surface from the center vertex. L2SaddPoint() has a built-in mechanism for
+  solving this
   problem, and it may be better. See L2SaddPoint() for argument descriptions.
 */
 int L2SaddVoxel(LABEL2SURF *l2s, double col, double row, double slice, int nsegs, int Operation)

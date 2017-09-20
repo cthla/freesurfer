@@ -34,12 +34,14 @@
 #include <stdlib.h>
 
 double round(double x);
+
+#include "mri.h"
+#include "mri2.h"
+
 #include "diag.h"
 #include "dtk.fs.h"
 #include "error.h"
 #include "matrix.h"
-#include "mri.h"
-#include "mri2.h"
 #include "mri_identify.h"
 #include "proto.h"
 #include "utils.h"

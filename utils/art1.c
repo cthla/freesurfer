@@ -33,7 +33,8 @@
 
       Description:
 
-  $Header: /space/repo/1/dev/dev/utils/art1.c,v 1.3 2011/03/02 00:04:42 nicks Exp $
+  $Header: /space/repo/1/dev/dev/utils/art1.c,v 1.3 2011/03/02 00:04:42 nicks
+Exp $
   $Log: art1.c,v $
   Revision 1.3  2011/03/02 00:04:42  nicks
   ENH: new license header mods
@@ -54,11 +55,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "art1.h"
 #include "diag.h"
 #include "error.h"
 #include "machine.h"
 #include "proto.h"
+
+#include "art1.h"
 
 #define InsCalloc calloc
 #define InsHalloc(a, b) calloc((int)(a), b)

@@ -27,8 +27,10 @@
 // if Freesurfer is configured *without* ITK libs (that is, if --with-itk-dir
 // wss not specified on the configure line), then include these stubs:
 extern "C" {
-#include "error.h"
 #include "mri.h"
+
+#include "error.h"
+
 MRI *mriNrrdReadDiffusion(char *fname, int read_volume)
 {
   ErrorReturn(NULL, (ERROR_UNSUPPORTED, "mriNrrdReadDiffusion(): Nrrd input of diffusion data not supported!"));
@@ -55,6 +57,8 @@ int mriNrrdWriteDiffusion(MRI *mri, char *fname)
 #include <unistd.h>
 
 extern "C" {
+#include "mri.h"
+
 #include "analyze.h"
 #include "chklc.h"
 #include "diag.h"
@@ -66,7 +70,6 @@ extern "C" {
 #include "math.h"
 #include "matrix.h"
 #include "minc_volume_io.h"
-#include "mri.h"
 #include "mri_identify.h"
 #include "proto.h"
 #include "region.h"

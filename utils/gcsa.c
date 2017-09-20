@@ -30,6 +30,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "mrisurf.h"
+
 #include "annotation.h"
 #include "cma.h"
 #include "colortab.h"
@@ -40,7 +42,6 @@
 #include "icosahedron.h"
 #include "macros.h"
 #include "mrishash.h"
-#include "mrisurf.h"
 #include "proto.h"
 #include "tags.h"
 #include "transform.h"

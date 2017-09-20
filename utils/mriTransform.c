@@ -20,11 +20,12 @@
  * Reporting: freesurfer@nmr.mgh.harvard.edu
  *
  */
-
-#include "mriTransform.h"
-#include "macros.h"
 #include <math.h>
 #include <stdlib.h>
+
+#include "macros.h"
+
+#include "mriTransform.h"
 
 char *Trns_ksaErrorStrings[Trns_knNumErrorCodes] = {
 

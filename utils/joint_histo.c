@@ -18,13 +18,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "mri.h"
+
 #include "diag.h"
 #include "error.h"
 #include "fio.h"
 #include "histo.h"
 #include "joint_histo.h"
 #include "macros.h"
-#include "mri.h"
 #include "proto.h"
 
 inline int min(int a, int b) { return (a < b) ? a : b; }

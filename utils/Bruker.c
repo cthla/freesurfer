@@ -138,17 +138,18 @@
 /* Martin Hoerrmann. */
 
 char *BRUCKER_C_VERSION = "$Revision: 1.12 $";
-
-#include "Bruker.h"
-#include "matrix.h"
-#include "mri.h"
-#include "utils.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include "matrix.h"
+#include "mri.h"
+#include "utils.h"
+
+#include "Bruker.h"
 
 #define V4_LOAD(v, x, y, z, r) (VECTOR_ELT(v, 1) = x, VECTOR_ELT(v, 2) = y, VECTOR_ELT(v, 3) = z, VECTOR_ELT(v, 4) = r);
 

@@ -21,25 +21,27 @@
  * Reporting: freesurfer@nmr.mgh.harvard.edu
  *
  */
-
-#include "mri_identify.h"
-#include "Bruker.h"
-#include "DICOMRead.h"
-#include "analyze.h"
-#include "fio.h"
-#include "machine.h"
-#include "minc_volume_io.h"
-#include "mri.h"
-#include "mrisurf.h"
-#include "proto.h"
-#include "signa.h"
-#include "utils.h"
 #include <errno.h>
 #include <libgen.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#include "mri.h"
+#include "mrisurf.h"
+
+#include "Bruker.h"
+#include "DICOMRead.h"
+#include "analyze.h"
+#include "fio.h"
+#include "machine.h"
+#include "minc_volume_io.h"
+#include "proto.h"
+#include "signa.h"
+#include "utils.h"
+
+#include "mri_identify.h"
 
 extern int errno;
 

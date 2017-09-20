@@ -31,17 +31,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "mri.h"
+
 #include "artmap.h"
 #include "backprop.h"
 #include "diag.h"
 #include "error.h"
 #include "gclass.h"
 #include "macros.h"
-#include "mri.h"
-#include "mriclass.h"
 #include "proto.h"
 #include "region.h"
 #include "utils.h"
+
+#include "mriclass.h"
 
 /*-----------------------------------------------------
                     MACROS AND CONSTANTS

@@ -27,15 +27,17 @@ extern const char *Progname;
 /*-----------------------------------------------------
   INCLUDE FILES
   -------------------------------------------------------*/
-#include "aseg_edit_svm.h"
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "diag.h"
 #include "error.h"
 #include "mri.h"
 #include "utils.h"
 #include "voxlist.h"
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
+
+#include "aseg_edit_svm.h"
 
 #define NINPUTS(wsize, nscales)                                                                                        \
   (4 + (wsize * wsize * wsize) * nscales * (1 + 1)) // 3+1 = 3 grad components plus image intensity

@@ -32,6 +32,7 @@
  *          return the row and col of the min and max.
  * Notes:   1. MinPoint[0] = row of minimum...
  ***************************************************************/
+#include <hips.h>
 
 #include "minmaxrc.h"
 #include <hips.h>

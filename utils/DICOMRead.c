@@ -23,6 +23,7 @@
 
 #include <ctype.h>
 #include <dirent.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,17 +38,17 @@
 #include <malloc.h>
 #else
 void *malloc(size_t size);
-
 #endif
+
+#include "mri.h"
+
 #include "diag.h"
 #include "dti.h"
 #include "fio.h"
 #include "fsenv.h"
 #include "macros.h" // DEGREES
 #include "mosaic.h"
-#include "mri.h"
 #include "mri_identify.h"
-#include <math.h>
 
 #define _DICOMRead_SRC
 #include "DICOMRead.h"

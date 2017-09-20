@@ -21,17 +21,18 @@
  * Reporting: freesurfer@nmr.mgh.harvard.edu
  *
  */
-
-#include "mri_conform.h"
-#include "error.h"
-#include "histo.h"
-#include "mri.h"
 #include <errno.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "error.h"
+#include "histo.h"
+#include "mri.h"
+
+#include "mri_conform.h"
 
 /*-------------------------------------------------------------------*/
 double round(double); // why is this never defined?!?

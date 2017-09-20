@@ -57,23 +57,28 @@
  */
 
 #define RESAMPLE_SOURCE_CODE_FILE
-#include "resample.h"
-#include "bfileio.h"
-#include "corio.h"
-#include "diag.h"
-#include "label.h"
-#include "matrix.h"
-#include "mri.h"
-#include "mri2.h"
-#include "mrimorph.h"
-#include "mrishash.h"
-#include "mrisurf.h"
-#include "proto.h" // nint
+
 #include "timer.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "mri.h"
+#include "mri2.h"
+
+#include "bfileio.h"
+#include "corio.h"
+#include "diag.h"
+#include "label.h"
+#include "matrix.h"
+#include "mrimorph.h"
+#include "mrishash.h"
+#include "mrisurf.h"
+#include "proto.h" // nint
+
+#include "resample.h"
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -915,11 +920,13 @@ MRI *vol2surf_linear(MRI *SrcVol,
 /*!
 \fn MRI *MRISapplyReg(MRI *SrcSurfVals, MRI_SURFACE **SurfReg, int nsurfs,
                   int ReverseMapFlag, int DoJac, int UseHash)
-\brief Applies one or more surface registrations with or without jacobian correction.
+\brief Applies one or more surface registrations with or without jacobian
+correction.
 This should be used as a replacement for surf2surf_nnfr and surf2surf_nnfr_jac
 (it gives identical results).
 \param MRI *SrcSurfVals - Inputs
-\param MRIS **SurfReg - array of surface reg pairs, src1-trg1:src2-trg2:... where
+\param MRIS **SurfReg - array of surface reg pairs, src1-trg1:src2-trg2:...
+where
 trg1 and src2 are from the same anatomy.
 \param int nsurfs - total number of surfs in SurfReg
 \param int ReverseMapFlag - perform reverse mapping
@@ -1051,7 +1058,10 @@ MRI *MRISapplyReg(MRI *SrcSurfVals, MRI_SURFACE **SurfReg, int nsurfs, int Rever
       if (!UseHash || svtx < 0)
       {
         if (svtx < 0)
-          printf("Target vertex %d of pair %d unmapped in hash, using brute force\n", tvtxN, n);
+          printf("Target vertex %d of pair %d unmapped in hash, using brute "
+                 "force\n",
+                 tvtxN,
+                 n);
         svtx = MRISfindClosestVertex(SurfReg[kS], v->x, v->y, v->z, &dmin);
       }
       tvtxN = svtx;
@@ -1100,7 +1110,10 @@ MRI *MRISapplyReg(MRI *SrcSurfVals, MRI_SURFACE **SurfReg, int nsurfs, int Rever
         if (!UseHash || tvtx < 0)
         {
           if (tvtx < 0)
-            printf("Source vertex %d of pair %d unmapped in hash, using brute force\n", svtxN, n);
+            printf("Source vertex %d of pair %d unmapped in hash, using brute "
+                   "force\n",
+                   svtxN,
+                   n);
           tvtx = MRISfindClosestVertex(SurfReg[kT], v->x, v->y, v->z, &dmin);
         }
         svtxN = tvtx;
@@ -1670,7 +1683,8 @@ MRI *MRIsurf2VolOpt(MRI *ribbon, MRIS **surfs, MRI **overlays, int nsurfs, LTA *
   }
 
   if (Q == NULL)
-    Q2 = TransformRegDat2LTA(ribbon, ribbon, NULL); // regdat unrelated, just a way to get LTA
+    Q2 = TransformRegDat2LTA(ribbon, ribbon,
+                             NULL); // regdat unrelated, just a way to get LTA
   else
   {
     if (LTAmriIsSource(Q, ribbon))
@@ -1774,7 +1788,14 @@ MRI *MRIsurf2VolOpt(MRI *ribbon, MRIS **surfs, MRI **overlays, int nsurfs, LTA *
             vtxno = MRISfindClosestVertex(surfs[n], v.x, v.y, v.z, &d);
           if (vtxno < 0)
           {
-            printf("ERROR: MRIsurf2VolOpt(): No Match: %3d %3d %3d    %6.2f %6.2f %6.2f\n", c, r, s, v.x, v.y, v.z);
+            printf("ERROR: MRIsurf2VolOpt(): No Match: %3d %3d %3d    %6.2f "
+                   "%6.2f %6.2f\n",
+                   c,
+                   r,
+                   s,
+                   v.x,
+                   v.y,
+                   v.z);
             vtxno = MRISfindClosestVertex(surfs[n], v.x, v.y, v.z, &d);
             printf("%d    %d %d %d     %g %g %g  %5d\n", n, c, r, s, v.x, v.y, v.z, vtxno);
             printf("V -------------------------\n");
@@ -1796,7 +1817,8 @@ MRI *MRIsurf2VolOpt(MRI *ribbon, MRIS **surfs, MRI **overlays, int nsurfs, LTA *
             vtxnomin = vtxno;
           }
         } // surfs
-        // This can happen if only one hemi is specified but the voxel is in the other
+        // This can happen if only one hemi is specified but the voxel is in the
+        // other
         if (nmin == -1)
           continue;
         // Assign value from vertex to voxel
@@ -2052,11 +2074,16 @@ MRI *MRImapSurf2VolClosest(MRIS *surf, MRI *vol, MATRIX *Qa2v, float projfrac)
   return (map);
 }
 /*
-  \fn MRI *MRIseg2SegPVF(MRI *seg, LTA *seg2vol, double resmm, int *segidlist, int nsegs, MRI *mask, int ReInit, MRI
-  *out) \brief Computes the partial volume fraction (PVF:0->1) for each segmentation. The output geometry is derived
-  from the dst in seg2vol (seg2vol can go the other direction, it figures it out). The number of frames in the output
-  equals the number of segmentations (excluding 0).  Each frame is a map where the voxel value is the fraction of that
-  voxel that contains the seg corresonding to that frame. The algorithm works by sampling each output voxel over a
+  \fn MRI *MRIseg2SegPVF(MRI *seg, LTA *seg2vol, double resmm, int *segidlist,
+  int nsegs, MRI *mask, int ReInit, MRI
+  *out) \brief Computes the partial volume fraction (PVF:0->1) for each
+  segmentation. The output geometry is derived
+  from the dst in seg2vol (seg2vol can go the other direction, it figures it
+  out). The number of frames in the output
+  equals the number of segmentations (excluding 0).  Each frame is a map where
+  the voxel value is the fraction of that
+  voxel that contains the seg corresonding to that frame. The algorithm works by
+  sampling each output voxel over a
   uniform grid. For each sample, the location in seg is computed to
   get the segmentation. The number of hits for this segmentation/frame
   is then updated for that voxel. The distance in mm between the
@@ -2196,7 +2223,8 @@ MRI *MRIseg2SegPVF(
       nvox = MRIcountAboveThreshold(mask, 0.5);
     else
       nvox = vg->width * vg->height * vg->depth;
-    printf("MRIseg2SegPVF(): Initilizing cache nsegs = %d, nvox = %d, nthreads=%d, DoSeg=%d\n",
+    printf("MRIseg2SegPVF(): Initilizing cache nsegs = %d, nvox = %d, "
+           "nthreads=%d, DoSeg=%d\n",
            nsegs,
            nvox,
            nthreads,
@@ -2416,7 +2444,8 @@ MRI *MRIseg2SegPVF(
   return (out);
 }
 /*
-  \fn MRI *MRIsegPVF2Seg(MRI *segpvf, int *segidlist, int nsegs, COLOR_TABLE *ct, MRI *mask, MRI *seg)
+  \fn MRI *MRIsegPVF2Seg(MRI *segpvf, int *segidlist, int nsegs, COLOR_TABLE
+  *ct, MRI *mask, MRI *seg)
   \brief Converts a segmentation-wise PVF created by MRIseg2SegPVF()
   into a segmentation by selecting the segmentation that has the
   largest PVF. If the sum of PVFs at a voxel is less than 0.5, then
@@ -2463,7 +2492,8 @@ MRI *MRIsegPVF2Seg(MRI *segpvf, int *segidlist, int nsegs, COLOR_TABLE *ct, MRI 
 }
 
 /*
-  \fn int VOXsegPVF2Seg(double *segpvfvox, int *segidlist, int nsegs, COLOR_TABLE *ct)
+  \fn int VOXsegPVF2Seg(double *segpvfvox, int *segidlist, int nsegs,
+  COLOR_TABLE *ct)
   \brief Selects the seg with the greatest PVF.  If the sum of PVFs at
   a voxel is less than 0.5, then the seg is set to 0.  If no seg has
   PVF>.5 and ct is non-NULL, then the PVFs within each tissue type are
@@ -2541,7 +2571,8 @@ int VOXsegPVF2Seg(float *segpvfvox, int *segidlist, int nsegs, COLOR_TABLE *ct)
 }
 
 /*
-  \fn MRI *MRIsegPVF2TissueTypePVF(MRI *segpvf, int *segidlist, int nsegs, COLOR_TABLE *ct, MRI *mask, MRI *pvf)
+  \fn MRI *MRIsegPVF2TissueTypePVF(MRI *segpvf, int *segidlist, int nsegs,
+  COLOR_TABLE *ct, MRI *mask, MRI *pvf)
   \brief Converts a SegPVF (as computed by MRIseg2SegPVF()) to tissue
   type PVF, where the conversion from seg to TT is given in the ct. It
   may be more efficient to convert a highres seg to a tissue type seg
@@ -2823,7 +2854,8 @@ MRI *MRIaseg2vol(MRI *aseg, MATRIX *tkR, MRI *voltemp, double fthresh, MRI **pvo
   return (volaseg);
 }
 /*
-  \fn MRI *MRIaseg2volMU(MRI *aseg, LTA *aseg2vol, double fthresh, MRI **pvolhit, int USF, COLOR_TABLE *ct)
+  \fn MRI *MRIaseg2volMU(MRI *aseg, LTA *aseg2vol, double fthresh, MRI
+  **pvolhit, int USF, COLOR_TABLE *ct)
   \brief Frontend for MRIaseg2vol(). This version takes a LTA and
   USF. It will reduce the FoV of the aseg to the smallest bounding
   box. This will then be upsampled by USF. The result (and a proper
@@ -2884,7 +2916,8 @@ MRI *MRIaseg2volMU(MRI *aseg, LTA *aseg2vol, double fthresh, MRI **pvolhit, int 
   return (OutVol);
 }
 /*
-  \fn MRI *MRIchangeSegRes(MRI *seg, double xsize, double ysize, double zsize, COLOR_TABLE *ct, LTA **seg2new)
+  \fn MRI *MRIchangeSegRes(MRI *seg, double xsize, double ysize, double zsize,
+  COLOR_TABLE *ct, LTA **seg2new)
   \brief Changes the resolution of the segmentation to
   {x,y,z}size. I'm not sure how the results will differ from
   MRIaseg2volMU() or MRIaseg2vol(). This uses MRIseg2SegPVF() and MRIaseg2vol()
@@ -2951,8 +2984,10 @@ static int MostHitsInVolVox(ASEGVOLINDEX *avindsorted, int N, int *segidmost, CO
       if (ct->entries[segid]->TissueType >= 0)
         nPerTType[ct->entries[segid]->TissueType] += nhits;
       if (ct->entries[segid]->TissueType == -2)
-        printf(
-            "WARNING: color table entry %d %s has not been assigned a tissue type\n", segid, ct->entries[segid]->name);
+        printf("WARNING: color table entry %d %s has not been assigned a "
+               "tissue type\n",
+               segid,
+               ct->entries[segid]->name);
     }
     nsegs++; // keep count of number of segs
   }

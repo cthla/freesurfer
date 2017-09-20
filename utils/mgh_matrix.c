@@ -23,13 +23,15 @@
  *
  */
 
-#include "mgh_matrix.h"
-#include "error.h"
-#include "proto.h"
-#include "typedefs.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "error.h"
+#include "proto.h"
+#include "typedefs.h"
+
+#include "mgh_matrix.h"
 
 FLOATTYPE *MGH_vector(int n)
 {
