@@ -1129,7 +1129,8 @@ int GCAvoxelToPrior(
   int errCode = NO_ERROR;
 
   /*!
-    @bugs gca would be const if its tmp__ variable wasn't used as workspace in GCAvoxelToPriorReal
+    @bugs gca would be const if its tmp__ variable wasn't used as workspace in
+    GCAvoxelToPriorReal
   */
 
   GCAvoxelToPriorReal(gca, mri, xv, yv, zv, &xp, &yp, &zp);
@@ -1326,7 +1327,8 @@ int GCAsourceVoxelToPrior(
       call to GCAvoxelToPrior, which will immediately
       convert them to int
       */
-      // we should change everything to use double, but at the moment they don't, which is why the cast is here (BRF)
+      // we should change everything to use double, but at the moment they
+      // don't, which is why the cast is here (BRF)
       xt = xrt;
       yt = yrt;
       zt = zrt;
@@ -2905,9 +2907,12 @@ GCA *GCAread(const char *fname)
     }
     prior_spacing = znzreadFloat(file);
     node_spacing = znzreadFloat(file);
-    // prior_width = znzreadInt(file);
-    // prior_height = znzreadInt(file);
-    // prior_depth = znzreadInt(file);
+    // prior_width =
+    znzreadInt(file);
+    // prior_height =
+    znzreadInt(file);
+    // prior_depth =
+    znzreadInt(file);
     node_width = znzreadInt(file);
     node_height = znzreadInt(file);
     node_depth = znzreadInt(file);
@@ -4924,7 +4929,8 @@ float GCAcomputeLabelIntensityVariance(GCA *gca, GCA_SAMPLE *gcas, MRI *mri_inpu
   max_label = 0;
   total_var = 0.0;
   // ifdef HAVE_OPENMP
-  // pragma omp parallel for firstprivate(gcas, tid, m_prior2source_voxel) reduction(max:max_label)
+  // pragma omp parallel for firstprivate(gcas, tid, m_prior2source_voxel)
+  // reduction(max:max_label)
   // endif
   for (i = 0; i < nsamples; i++)
   {
@@ -9752,9 +9758,12 @@ MRI *GCAconstrainLabelTopology(GCA *gca,
     }
 
     /*
-      for the ventricles we want to get rid of segments that are not close to the
-      main/biggest one, but being wary of small disconnections. Dilate the labels
-      a few times to close small disconnections, then erase segments that are still
+      for the ventricles we want to get rid of segments that are not close to
+      the
+      main/biggest one, but being wary of small disconnections. Dilate the
+      labels
+      a few times to close small disconnections, then erase segments that are
+      still
       not connected.
     */
     if (IS_LAT_VENT(i))
@@ -9792,7 +9801,8 @@ MRI *GCAconstrainLabelTopology(GCA *gca,
     /*    printf("\t%d segments:\n", mriseg->nsegments) ;*/
     for (j = 0; j < mriseg->nsegments; j++)
     {
-      // every voxel in the lateral ventricle label should be in the max segment found above, or just big enough and
+      // every voxel in the lateral ventricle label should be in the max segment
+      // found above, or just big enough and
       // keep it
       if (IS_LAT_VENT(i) && ((mriseg->segments[j].nvoxels * voxel_volume > vent_topo_volume_thresh2)
                              || ((mriseg->segments[j].nvoxels * voxel_volume > vent_topo_volume_thresh1)
@@ -9804,7 +9814,8 @@ MRI *GCAconstrainLabelTopology(GCA *gca,
                                         > 0)))
       {
         if (mriseg->segments[j].nvoxels * voxel_volume > vent_topo_volume_thresh2)
-          printf(" !!!!!!!!! ventrice segment %d with volume %2.0f above threshold %2.0f - not erasing !!!!!!!!!!\n",
+          printf(" !!!!!!!!! ventrice segment %d with volume %2.0f above "
+                 "threshold %2.0f - not erasing !!!!!!!!!!\n",
                  j,
                  mriseg->segments[j].nvoxels * voxel_volume,
                  vent_topo_volume_thresh2);
@@ -19846,7 +19857,8 @@ int GCAseqRenormalizeWithAlignment(GCA *gca,
     {
       if (old_label_computed[l] != 0) // merge offsets and scales
       {
-        // printf("%d   old: %f   new: %f   final: ",l,old_label_scales[l], plabel_scales[l]);
+        // printf("%d   old: %f   new: %f   final: ",l,old_label_scales[l],
+        // plabel_scales[l]);
         old_label_offsets[l] = plabel_scales[l] * old_label_offsets[l] + plabel_offsets[l];
         old_label_scales[l] *= plabel_scales[l];
       }
@@ -20162,7 +20174,8 @@ static LABEL_HISTOS *lhRead(char *fname)
   {
     cp = fgetl(line, STRLEN - 1, fp);
     sscanf(cp, "subject = %s type = %d", lh->subjects[s], &lh->types[s]);
-    //    printf("reading subject %d: %s, acquisition type = %d\n", s, lh->subjects[s], lh->types[s]) ;
+    //    printf("reading subject %d: %s, acquisition type = %d\n", s,
+    //    lh->subjects[s], lh->types[s]) ;
 
     // read in global histogram
     cp = fgetl(line, 2 * STRLEN - 1, fp);
@@ -21367,7 +21380,9 @@ int GCAcomputeRenormalizationWithAlignment(GCA *gca,
         {
           if (fscanf(fp, "%d %f %f", &l, &scale, &offset) != 3)
           {
-            fprintf(stderr, "ERROR: GCAmapRenormalizeWithAlignment: could not scan value(s)\n");
+            fprintf(stderr,
+                    "ERROR: GCAmapRenormalizeWithAlignment: could not "
+                    "scan value(s)\n");
             exit(1);
           }
           label_scales[l] = scale;
@@ -21986,7 +22001,8 @@ int GCAcomputeRenormalizationWithAlignment(GCA *gca,
   return (NO_ERROR);
 }
 /*
-  !!!!!!!!!!!!!! Note the difference in the longitudinal version is that every frame is
+  !!!!!!!!!!!!!! Note the difference in the longitudinal version is that every
+  frame is
   the same modality but a different time point of the same subject.
 */
 int GCAcomputeRenormalizationWithAlignmentLongitudinal(GCA *gca,
@@ -22593,7 +22609,9 @@ int GCAcomputeRenormalizationWithAlignmentLongitudinal(GCA *gca,
       {
         if (fscanf(fp, "%d %f %f", &l, &scale, &offset) != 3)
         {
-          fprintf(stderr, "ERROR: GCAmapRenormalizeWithAlignment: could not scan value(s)\n");
+          fprintf(stderr,
+                  "ERROR: GCAmapRenormalizeWithAlignment: could not "
+                  "scan value(s)\n");
           exit(1);
         }
         label_scales[l] = scale;
@@ -24913,7 +24931,8 @@ MRI *GCAreplaceImpossibleLabels(
             }
           }
           if (x == Ggca_x && y == Ggca_y && z == Ggca_z)
-            printf("GCAreplaceImpossibleLabels: changing label at (%d, %d, %d) from %s (%d) to %s (%d)\n",
+            printf("GCAreplaceImpossibleLabels: changing label at (%d, %d, %d) "
+                   "from %s (%d) to %s (%d)\n",
                    x,
                    y,
                    z,
@@ -26922,7 +26941,8 @@ MRI *GCAcomputeLikelihoodImage(GCA *gca, MRI *mri_inputs, MRI *mri_labeled, TRAN
         label = MRIgetVoxVal(mri_labeled, x, y, z, 0);
         gc = GCAfindSourceGC(gca, mri_inputs, transform, x, y, z, label);
         if (gc == NULL)
-          continue; // outside of the domain of the classifiers - leave likelihood at 0
+          continue; // outside of the domain of the classifiers - leave
+                    // likelihood at 0
         load_vals(mri_inputs, x, y, z, vals, gca->ninputs);
         likelihood = GCAcomputeConditionalDensity(gc, vals, gca->ninputs, label);
         if (DZERO(likelihood))
@@ -28379,7 +28399,8 @@ MRI *GCAreclassifyUnlikelyVoxels(GCA *gca,
 
   mri_changed = MRIclone(mri_aseg, NULL);
   MRIsetValues(mri_changed, 1.0);
-  printf("relabeling unlikely (>%2.0f sigmas from mean) voxels in %d mm window, with sigma = %2.0f\n",
+  printf("relabeling unlikely (>%2.0f sigmas from mean) voxels in %d mm "
+         "window, with sigma = %2.0f\n",
          mah_dist_thresh,
          wsize,
          sigma);
@@ -28834,7 +28855,8 @@ int GCAcheck(GCA *gca)
           label = gcap->labels[n];
           gc = GCAfindGC(gca, xn, yn, zn, label);
           if (gc == NULL)
-            printf("gcap(%d, %d, %d), labels[%d] = %s (%d) --> node (%d, %d, %d), no gc!\n",
+            printf("gcap(%d, %d, %d), labels[%d] = %s (%d) --> node (%d, %d, "
+                   "%d), no gc!\n",
                    xp,
                    yp,
                    zp,
@@ -29205,9 +29227,11 @@ int GCAsourceVoxelToPriorReal(
   }
   else // morph 3d type can go directly from source to template
   {
-    // printf("GCAsourcevoxelToPriorReal: (xv,yv,zv) = (%d,%d,%d).\n", xv, yv, zv);
+    // printf("GCAsourcevoxelToPriorReal: (xv,yv,zv) = (%d,%d,%d).\n", xv, yv,
+    // zv);
     TransformSample(transform, xv, yv, zv, &xt, &yt, &zt);
-    // printf("GCAsourcevoxelToPriorReal: (xt,yt,zt) = (%f,%f,%f).\n", xt, yt, zt); //LZ
+    // printf("GCAsourcevoxelToPriorReal: (xt,yt,zt) = (%f,%f,%f).\n", xt, yt,
+    // zt); //LZ
   }
   // get the position in gca from talairach volume
   // printf("GCAsourcevoxelToPriorReal: printing mri_tal\n");
@@ -29320,7 +29344,9 @@ int GCAinsertLabels(GCA *gca,
               {
                 for (i = 0; i < GIBBS_NEIGHBORS; i++)
                 {
-                  gc->nlabels[i] = gcan->nlabels + 1; // assume any of existing labels can occur plus this one
+                  gc->nlabels[i] = gcan->nlabels + 1; // assume any of existing
+                                                      // labels can occur plus
+                                                      // this one
                   gc->labels[i] = (unsigned short *)calloc(gc->nlabels[i], sizeof(unsigned short));
                   if (!gc->labels)
                   {
@@ -29875,14 +29901,16 @@ int GCAisLeftHemisphere(GCA *gca, MRI *mri, TRANSFORM *transform, int x, int y, 
   MRIwrite(gcaseg,"gcaseg.mgh");
 
   The output can be converted to uchar
-    mri_convert gca.intensities.mgh  gca.mode.mgh --split -odt uchar --no_scale 1
+    mri_convert gca.intensities.mgh  gca.mode.mgh --split -odt uchar --no_scale
+  1
   The result can be fed to mri_ca_normalize
     mri_ca_normalize -c cp.mgh -mask brainmask.mgz \
        gca.mode0000.mgh gca.mode0001.mgh gca.mode0002.mgh \
        wmsa_new_eesmith.gca talairach.m3z \
        gca.mode0000.can.mgh gca.mode0001.can.mgh gca.mode0002.can.mgh
   gca.mode000?.can.mgh should be pretty close to gca.mode0000.mgh. It is not
-  exact, maybe because of the conversion to uchar (which mri_ca_normalize requires).
+  exact, maybe because of the conversion to uchar (which mri_ca_normalize
+  requires).
 */
 MRI *GCAsampleToVol(MRI *mri, GCA *gca, TRANSFORM *transform, MRI **seg, MRI *out)
 {
@@ -30121,16 +30149,20 @@ int MRIwmsaHalo(MRI *mri_inputs, MRI *mri_labeled, int n)
             }
             // printf("Computing means and covariances\n");
             // fflush(stdout);
-            // MRIcomputeNbhdMeansandCovariances(mri_inputs, label_copy, wm_label, x, y, z, n, &wm_cov, &wm_means);
+            // MRIcomputeNbhdMeansandCovariances(mri_inputs, label_copy,
+            // wm_label, x, y, z, n, &wm_cov, &wm_means);
             // printf("Computing means and covariances\n");
             // fflush(stdout);
-            // MRIcomputeNbhdMeansandCovariances(mri_inputs, label_copy, wmsa_label, x, y, z, n, &wmsa_cov,
+            // MRIcomputeNbhdMeansandCovariances(mri_inputs, label_copy,
+            // wmsa_label, x, y, z, n, &wmsa_cov,
             // &wmsa_means);
             // printf("finished\n");
             // fflush(stdout);
 
-            // m_inv_cov_wm = MatrixAlloc(wm_cov->rows, wm_cov->cols, wm_cov->type) ;
-            // m_inv_cov_wmsa = MatrixAlloc(wmsa_cov->rows, wmsa_cov->cols, wmsa_cov->type) ;
+            // m_inv_cov_wm = MatrixAlloc(wm_cov->rows, wm_cov->cols,
+            // wm_cov->type) ;
+            // m_inv_cov_wmsa = MatrixAlloc(wmsa_cov->rows, wmsa_cov->cols,
+            // wmsa_cov->type) ;
 
             // printf("Calculating WMSA inv matrix\n");
             // fflush(stdout);
@@ -30236,7 +30268,8 @@ int MRIwmsaHalo2(WMSA *wmsa)
   int wmsacomp[nreftissues][nmodalities];
   int llabel[1];
 
-  // For each ref tissue, compute the means for each modality and covariance matrix across all modalities
+  // For each ref tissue, compute the means for each modality and covariance
+  // matrix across all modalities
   // 0 = dont use any neighbors
   print("size %d\n", (int)sizeof(llabel));
   for (i = 0; i < nreftissues; i++)
@@ -30272,7 +30305,8 @@ int MRIwmsaHalo2(WMSA *wmsa)
   {
     changed = 0;
 
-    // create a static copy of the label file so we can dynamically update the true label file
+    // create a static copy of the label file so we can dynamically update the
+    // true label file
     label_copy = MRIcopy(wmsa->seg, NULL);
 
     for (x = 0; x < wmsa->seg->width; x++)
@@ -30288,7 +30322,8 @@ int MRIwmsaHalo2(WMSA *wmsa)
           if ((label == wmsa_labels[0]) || (label == wmsa_labels[1]))
             continue;
 
-          // Only continue with voxel if its label matches one of the user's seg inputs
+          // Only continue with voxel if its label matches one of the user's seg
+          // inputs
           ok = 0;
           for (c = 0; c < nreftissues; c++)
           {
@@ -30311,7 +30346,8 @@ int MRIwmsaHalo2(WMSA *wmsa)
           ngm2 = MRIlabelsInNbhd(label_copy, x, y, z, 1, gm_labels[1]); // rh
           ngm = ngm1 + ngm2;                                            // one of them will probably be 0
 
-          // Ignore this voxel if it has 0 WMSA neighbors or a single GM neighbor
+          // Ignore this voxel if it has 0 WMSA neighbors or a single GM
+          // neighbor
           if (nwmsa < 1 || ngm > 0)
             continue;
 
@@ -30319,9 +30355,11 @@ int MRIwmsaHalo2(WMSA *wmsa)
           for (a = 0; a < nmodalities; a++)
             v_vals->rptr[a + 1][1] = MRIgetVoxVal(wmsa->modalities, x, y, z, a);
 
-          // If this vox is really a WMSA, then each modality at this voxel should have
+          // If this vox is really a WMSA, then each modality at this voxel
+          // should have
           // the same intensity relationship with WMSA as the reference tissue.
-          // Use wmsacomp matrix to check if voxel vals should be higher or lower than seg of interest
+          // Use wmsacomp matrix to check if voxel vals should be higher or
+          // lower than seg of interest
           // If wmsacomp=1, then
           nmatches = 0;
           for (d = 0; d < nmodalities; d++)

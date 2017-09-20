@@ -777,7 +777,6 @@ int MRIvol2Vol(MRI *src, MRI *targ, MATRIX *Vt2s, int InterpCode, float param)
   int cudaReturn;
 #else
   int ct, show_progress_thread;
-  // int tid;
   float *valvects[_MAX_FS_THREADS];
 #endif
   int sinchw;
@@ -843,6 +842,7 @@ int MRIvol2Vol(MRI *src, MRI *targ, MATRIX *Vt2s, int InterpCode, float param)
     bspline = MRItoBSpline(src, NULL, 3);
 
 #ifdef HAVE_OPENMP
+  int tid;
   if (omp_get_max_threads() == 1)
     show_progress_thread = 0;
   else
@@ -5857,4 +5857,3 @@ MRI *CTABcount2MRI(COLOR_TABLE *ct, MRI *seg)
 
   return (mri);
 }
-

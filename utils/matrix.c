@@ -2187,7 +2187,8 @@ MATRIX *MatrixAsciiReadFrom(FILE *fp, MATRIX *m)
       else if (fscanf(fp, "%f  ", &m->rptr[row][col]) != 1)
         ErrorReturn(NULL, (ERROR_BADFILE, "MatrixAsciiReadFrom: could not scan element (%d, %d)", row, col));
     }
-    if (fscanf(fp, "\n") != 1)
+    // scan newlines but only fail if not at end of matrix
+    if (fscanf(fp, "\n") != 1 && col < cols)
     {
       ErrorReturn(NULL, (ERROR_BADFILE, "MatrixAsciiReadFrom: could not scan newline"));
     }

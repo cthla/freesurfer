@@ -55,6 +55,7 @@
 #include <volume_io.h> //from MNI
 /* remove unwanted warnings between hips_basic.h vs. volume_io/basic.h */
 #undef ABS
-#undef SIGN
+#undef SIGN 
+#undef X
 
 #endif // MINC_VOLUME_IO_H

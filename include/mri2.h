@@ -24,9 +24,7 @@
  */
 
 
-#ifdef X
-#undef X
-#endif
+
 
 #ifndef MRI2_H
 #define MRI2_H
@@ -39,6 +37,10 @@ extern "C" {
 #include "mriTransform.h"
 #include "mrisurf.h"
 #include "connectcomp.h"
+
+#ifdef X
+#undef X
+#endif
 
 MRI *mri_load_bvolume(char *bfstem);
 int  mri_save_as_bvolume(MRI *vol, char *stem, int svendian, int svtype);

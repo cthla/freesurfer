@@ -1338,7 +1338,6 @@ HISTOGRAM *MRIhistogramRegionWithThreshold(
     MRI *mri, int nbins, HISTOGRAM *histo, MRI_REGION *region, MRI *mri_thresh, float thresh, int frame)
 {
   int width, height, depth, z, x0, y0, z0;
-  // int tid;
   float fmin, fmax;
 #ifdef HAVE_OPENMP
   HISTOGRAM *histos[_MAX_FS_THREADS];
@@ -1405,6 +1404,8 @@ HISTOGRAM *MRIhistogramRegionWithThreshold(
   }
 
 #ifdef HAVE_OPENMP
+  int tid;
+
   for (tid = 0; tid < _MAX_FS_THREADS; tid++)
   {
     histos[tid] = HISTOalloc(nbins);

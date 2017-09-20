@@ -2192,7 +2192,7 @@ static MRI *siemensRead(const char *fname, int read_volume_flag)
   number_of_averages = orderIntBytes(number_of_averages);
   memset(pulse_sequence_name, 0x00, STRLEN);
   fseek(fp, 3009, SEEK_SET);
-  if (fread(&pulse_sequence_name, 1, 65, fp) != 1)
+  if (fread(&pulse_sequence_name, 1, 65, fp) != 65)
   {
     ErrorReturn(NULL, (ERROR_BADFILE, "siemensRead(): could not read variable"));
   }
@@ -4717,7 +4717,7 @@ static MRI *bvolumeRead(const char *fname_passed, int read_volume, int type)
   }
   else
   {
-    if (fscanf(fp, "%*d %*d %*d %d", &swap_bytes_flag) != 4)
+    if (fscanf(fp, "%*d %*d %*d %d", &swap_bytes_flag) != 1)
     {
       ErrorReturn(NULL, (ERROR_BADFILE, "Error: could not read variable"));
     }
@@ -15252,13 +15252,13 @@ static MRI *readGCA(const char *fname, int start_frame, int end_frame)
 MRI *MRIremoveNaNs(MRI *mri_src, MRI *mri_dst)
 {
   int x, nans = 0;
-  // int width;
 
   if (mri_dst != mri_src)
     mri_dst = MRIcopy(mri_src, mri_dst);
-// width = mri_dst->width;
 
 #ifdef HAVE_OPENMP
+  int width;
+  width = mri_dst->width;
 #pragma omp parallel for firstprivate(width) shared(mri_dst) reduction(+ : nans)
 #endif
   for (x = 0; x < mri_dst->width; x++)

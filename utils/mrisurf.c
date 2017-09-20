@@ -29,6 +29,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <limits.h>
 
 #ifdef HAVE_OPENMP
 #include <omp.h>
@@ -23310,7 +23311,6 @@ mrisSampleParallelEnergy(MRI_SURFACE *mris, VERTEX *v, INTEGRATION_PARMS *parms,
   FACE *face;
   float x, y, z;
   MHT *mht = (MHT *)(parms->mht);
-  //  int     n ;
 
   project_point_onto_sphere(cx, cy, cz, mris->radius, &cx, &cy, &cz);
   x = v->x;
@@ -23329,6 +23329,8 @@ mrisSampleParallelEnergy(MRI_SURFACE *mris, VERTEX *v, INTEGRATION_PARMS *parms,
   v->z = cz ;  // change coords to here and compute effects on sse
   sse = mrisSampleParallelEnergyAtVertex(mris, v, parms) ;
 #if 1
+  int     n ;
+
   for (num = 1, n = 0 ; n < v->vnum ; n++)
   {
     VERTEX *vn ;
