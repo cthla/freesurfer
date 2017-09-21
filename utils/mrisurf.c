@@ -41878,7 +41878,7 @@ static int mrisReadTriangleFilePositions(MRI_SURFACE *mris, const char *fname)
   {
     ErrorExit(ERROR_BAD_FILE, "mrisReadTriangleFile: could not read line");
   }
-  if (fscanf(fp, "\n") != 1)
+  if (fscanf(fp, "\n") != 0)
   {
     ErrorExit(ERROR_BAD_FILE, "mrisReadTriangleFile: could not read line");
   }
