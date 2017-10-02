@@ -15,33 +15,34 @@
  *
  */
 
-
-// 
+//
 #ifdef VCL_NEEDS_PRAGMA_INTERFACE
 #pragma implementation
 #endif
 
 #include "fs_vnl/fs_lbfgs.h"
-#include <vcl_cmath.h>
 #include "diag.h"
-#include <vcl_iostream.h>
+#include <vcl_cmath.h>
 #include <vcl_iomanip.h> // for setw (replaces cout.form())
+#include <vcl_iostream.h>
 
 #include <vnl/algo/vnl_netlib.h> // lbfgs_()
 
 //: Default constructor.
 // memory is set to 5, line_search_accuracy to 0.9.
 // Calls init_parameters
-fs_lbfgs::fs_lbfgs():
-    fs_lbfgs_subject(), f_(0)
+fs_lbfgs::fs_lbfgs()
+    : fs_lbfgs_subject()
+    , f_(0)
 {
   init_parameters();
 }
 
 //: Constructor. f is the cost function to be minimized.
 // Calls init_parameters
-fs_lbfgs::fs_lbfgs(vnl_cost_function& f):
-    fs_lbfgs_subject(), f_(&f)
+fs_lbfgs::fs_lbfgs(vnl_cost_function &f)
+    : fs_lbfgs_subject()
+    , f_(&f)
 {
   init_parameters();
 }
@@ -55,7 +56,7 @@ void fs_lbfgs::init_parameters()
   default_step_length = 1.0;
 }
 
-bool fs_lbfgs::minimize(vnl_vector<double>& x)
+bool fs_lbfgs::minimize(vnl_vector< double > &x)
 {
   /* Local variables */
   /*     The driver for vnl_lbfgs must always declare LB2 as EXTERNAL */
@@ -69,18 +70,18 @@ bool fs_lbfgs::minimize(vnl_vector<double>& x)
   v3p_netlib_lbfgs_global_t lbfgs_global;
   v3p_netlib_lbfgs_init(&lbfgs_global);
 
-  long iprint[2] = {1, 0};
-  vnl_vector<double> g(n);
+  long iprint[2] = { 1, 0 };
+  vnl_vector< double > g(n);
 
   // Workspace
-  vnl_vector<double> diag(n);
+  vnl_vector< double > diag(n);
 
-  vnl_vector<double> w(n * (2*m+1)+2*m);
+  vnl_vector< double > w(n * (2 * m + 1) + 2 * m);
 
   if (verbose_)
-    vcl_cerr << "vnl_lbfgs: n = "<< n <<", memory = "<< m <<", Workspace = "
-    << w.size() << "[ "<< ( w.size() / 128.0 / 1024.0) <<" MB], ErrorScale = "
-    << f_->reported_error(1) <<", xnorm = "<< x.magnitude() << vcl_endl;
+    vcl_cerr << "vnl_lbfgs: n = " << n << ", memory = " << m << ", Workspace = " << w.size() << "[ "
+             << (w.size() / 128.0 / 1024.0) << " MB], ErrorScale = " << f_->reported_error(1)
+             << ", xnorm = " << x.magnitude() << vcl_endl;
 
   bool we_trace = (verbose_ && !trace);
 
@@ -88,7 +89,7 @@ bool fs_lbfgs::minimize(vnl_vector<double>& x)
     vcl_cerr << "vnl_lbfgs: ";
 
   double best_f = 0;
-  vnl_vector<double> best_x;
+  vnl_vector< double > best_x;
 
   bool ok;
   this->num_evaluations_ = 0;
@@ -118,16 +119,17 @@ bool fs_lbfgs::minimize(vnl_vector<double>& x)
       best_x = x;
       best_f = f;
 
-      this->notify( best_f, &best_x );
+      this->notify(best_f, &best_x);
     }
 
-#define print_(i,a,b,c,d) vcl_cerr<<vcl_setw(6)<<i<<' '<<vcl_setw(20)<<a<<' '\
-           <<vcl_setw(20)<<b<<' '<<vcl_setw(20)<<c<<' '<<vcl_setw(20)<<d<<'\n'
+#define print_(i, a, b, c, d)                                                                                          \
+  vcl_cerr << vcl_setw(6) << i << ' ' << vcl_setw(20) << a << ' ' << vcl_setw(20) << b << ' ' << vcl_setw(20) << c     \
+           << ' ' << vcl_setw(20) << d << '\n'
 
     if (check_derivatives_)
     {
       vcl_cerr << "vnl_lbfgs: f = " << f_->reported_error(f) << ", computing FD gradient\n";
-      vnl_vector<double> fdg = f_->fdgradf(x);
+      vnl_vector< double > fdg = f_->fdgradf(x);
       if (verbose_)
       {
         int l = n;
@@ -135,33 +137,43 @@ bool fs_lbfgs::minimize(vnl_vector<double>& x)
         int limit_tail = 10;
         if (l > limit + limit_tail)
         {
-          vcl_cerr << " [ Showing only first " <<limit<< " components ]\n";
+          vcl_cerr << " [ Showing only first " << limit << " components ]\n";
           l = limit;
         }
-        print_("i","x","g","fdg","dg");
-        print_("-","-","-","---","--");
+        print_("i", "x", "g", "fdg", "dg");
+        print_("-", "-", "-", "---", "--");
         for (int i = 0; i < l; ++i)
-          print_(i, x[i], g[i], fdg[i], g[i]-fdg[i]);
+          print_(i, x[i], g[i], fdg[i], g[i] - fdg[i]);
         if (n > limit)
         {
           vcl_cerr << "   ...\n";
           for (int i = n - limit_tail; i < n; ++i)
-            print_(i, x[i], g[i], fdg[i], g[i]-fdg[i]);
+            print_(i, x[i], g[i], fdg[i], g[i] - fdg[i]);
         }
       }
       vcl_cerr << "   ERROR = " << (fdg - g).squared_magnitude() / vcl_sqrt(double(n)) << "\n";
     }
 
     iprint[0] = trace ? 1 : -1; // -1 no o/p, 0 start and end, 1 every iter.
-    iprint[1] = 0; // 1 prints X and G
+    iprint[1] = 0;              // 1 prints X and G
     if (DIAG_VERBOSE_ON)
     {
-      iprint[0] = 1 ; // -1 no o/p, 0 start and end, 1 every iter.
-      iprint[1] = 1 ; // 1 prints X and G
+      iprint[0] = 1; // -1 no o/p, 0 start and end, 1 every iter.
+      iprint[1] = 1; // 1 prints X and G
     }
-    v3p_netlib_lbfgs_(
-      &n, &m, x.data_block(), &f, g.data_block(), &diagco, diag.data_block(),
-      iprint, &eps, &local_xtol, w.data_block(), &iflag, &lbfgs_global);
+    v3p_netlib_lbfgs_(&n,
+                      &m,
+                      x.data_block(),
+                      &f,
+                      g.data_block(),
+                      &diagco,
+                      diag.data_block(),
+                      iprint,
+                      &eps,
+                      &local_xtol,
+                      w.data_block(),
+                      &iflag,
+                      &lbfgs_global);
     ++this->num_iterations_;
 
     if (we_trace)
@@ -179,11 +191,11 @@ bool fs_lbfgs::minimize(vnl_vector<double>& x)
     if (iflag < 0)
     {
       // Eeek.
-      //vcl_cerr << "\nfs_lbfgs: WARN: (iflag < 0)\n";
+      // vcl_cerr << "\nfs_lbfgs: WARN: (iflag < 0)\n";
       ok = false;
 
       // this is an DJ addition for when the best_x is not initialized yet
-      if ( best_x.size() != 0 )
+      if (best_x.size() != 0)
       {
         this->end_error_ = f;
         x = best_x;
@@ -198,7 +210,7 @@ bool fs_lbfgs::minimize(vnl_vector<double>& x)
       ok = false;
 
       // this is an DJ addition for when the best_x is not initialized yet
-      if ( best_x.size() != 0 )
+      if (best_x.size() != 0)
       {
         this->end_error_ = f;
         x = best_x;
@@ -207,7 +219,8 @@ bool fs_lbfgs::minimize(vnl_vector<double>& x)
       break;
     }
   }
-  if (we_trace) vcl_cerr << "done\n";
+  if (we_trace)
+    vcl_cerr << "done\n";
 
   return ok;
 }
