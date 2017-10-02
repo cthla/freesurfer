@@ -2,7 +2,7 @@
  * @file  version.c
  * @brief freesurfer version functions defined here
  *
- * Looks for the --version, -version, --all-info, or -all-info tag in the 
+ * Looks for the --version, -version, --all-info, or -all-info tag in the
  * argv and if found, prints out version information, namely this:
  * ProgramVersion, TimeStamp, CVS, User, Machine, Platform, PlatformVersion
  * CompilerName, and CompilerVersion.
@@ -26,63 +26,60 @@
  *
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <sys/utsname.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <pwd.h>
 #include "version.h"
-#include "utils.h"
-#include "error.h"
 #include "const.h"
+#include "error.h"
+#include "utils.h"
+#include <pwd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/utsname.h>
+#include <time.h>
+#include <unistd.h>
 
 /* Set our compiler name */
 #if defined(__INTEL_COMPILER)
-#  undef __GNUC__
-#  define COMPILER_NAME "INTEL_COMPILER"
+#undef __GNUC__
+#define COMPILER_NAME "INTEL_COMPILER"
 #elif defined(__GNUC__)
-#  define COMPILER_NAME "GCC"
+#define COMPILER_NAME "GCC"
 #else
-#  define COMPILER_NAME "Non-GCC"
+#define COMPILER_NAME "Non-GCC"
 #endif
 
 /* If GCC (probably is) get the version number */
 #if defined(__GNUC__)
-# if defined(__GNU_PATCHLEVEL__)
-#  define COMPILER_VERSION (__GNUC__ * 10000 \
-                            + __GNUC_MINOR__ * 100 \
-                            + __GNUC_PATCHLEVEL__)
-# else
-#  define COMPILER_VERSION (__GNUC__ * 10000 \
-                            + __GNUC_MINOR__ * 100)
-# endif
+#if defined(__GNU_PATCHLEVEL__)
+#define COMPILER_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #else
-#  define COMPILER_VERSION 0
+#define COMPILER_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
+#endif
+#else
+#define COMPILER_VERSION 0
 #endif
 
 /* Figure out the platform. */
 #if defined(Linux) || defined(linux) || defined(__linux)
-#  define PLATFORM "Linux"
+#define PLATFORM "Linux"
 #endif
 #if defined(Darwin) || defined(__MACOSX__) || defined(__APPLE__)
-#  define PLATFORM "Darwin"
+#define PLATFORM "Darwin"
 #endif
 #if defined(IRIX) || defined(sgi) || defined(mips) || defined(_SGI_SOURCE)
-#  define PLATFORM "IRIX"
+#define PLATFORM "IRIX"
 #endif
 #if defined(sun) || defined(__sun)
-# if defined(__SVR4) || defined(__svr4__)
-#  define PLATFORM "Solaris"
-# else
-#  define PLATFORM "SunOS"
-# endif
+#if defined(__SVR4) || defined(__svr4__)
+#define PLATFORM "Solaris"
+#else
+#define PLATFORM "SunOS"
+#endif
 #endif
 #if defined(Windows_NT)
-#  define PLATFORM "Windows"
+#define PLATFORM "Windows"
 #endif
 
 #ifndef PLATFORM
@@ -116,9 +113,8 @@
    exit (0);
    argc -= nargs;
 */
-int
-make_cmd_version_string (int argc, char** argv,  const char* id_string,
-                         const char* version_string, char *return_string)
+int make_cmd_version_string(
+    int argc, char **argv, const char *id_string, const char *version_string, char *return_string)
 {
   int nnarg = 0;
   char stripped_version_string[1024];
@@ -138,47 +134,50 @@ make_cmd_version_string (int argc, char** argv,  const char* id_string,
 
   if (strlen(version_string) > 7)
   {
-    strcpy (stripped_version_string, &(version_string[7]));
-    length = strlen (stripped_version_string);
+    strcpy(stripped_version_string, &(version_string[7]));
+    length = strlen(stripped_version_string);
     if (length > 2)
     {
-      stripped_version_string[length-2] = '\0';
+      stripped_version_string[length - 2] = '\0';
     }
   }
   else
   {
-    strcpy (stripped_version_string, version_string);
+    strcpy(stripped_version_string, version_string);
   }
 
   begin = argv[0];
-  strcpy (program_name, begin);
+  strcpy(program_name, begin);
 
   /* Copy the arguments to the arguments string. */
-  strcpy (arguments, "");
+  strcpy(arguments, "");
   if (argc > 1)
   {
-    strncpy (arguments, argv[1], 1023);
+    strncpy(arguments, argv[1], 1023);
     for (nnarg = 2; nnarg < argc; nnarg++)
     {
-      // on Slackware Linux, libc does not support having the same source and 
+      // on Slackware Linux, libc does not support having the same source and
       // destination, like this:
-      //sprintf (arguments, "%s %s", arguments, argv[nnarg]);
+      // sprintf (arguments, "%s %s", arguments, argv[nnarg]);
       // the correct way to do this is:
-      strcat (arguments, " ");
+      strcat(arguments, " ");
       if (strlen(arguments) + strlen(argv[nnarg]) >= 1023)
-        break ;
-      strcat (arguments, argv[nnarg]);
+        break;
+      strcat(arguments, argv[nnarg]);
     }
   }
 
   /* Find the time string. */
   seconds = time(NULL);
-  gmtime_r (&seconds, &broken_time);
-  sprintf (current_time_stamp, "20%02d/%02d/%02d-%02d:%02d:%02d-GMT",
-           broken_time.tm_year%100, /* mod here to change 103 to 03 */
-           broken_time.tm_mon+1, /* +1 here because tm_mon is 0-11 */
-           broken_time.tm_mday, broken_time.tm_hour,
-           broken_time.tm_min, broken_time.tm_sec);
+  gmtime_r(&seconds, &broken_time);
+  sprintf(current_time_stamp,
+          "20%02d/%02d/%02d-%02d:%02d:%02d-GMT",
+          broken_time.tm_year % 100, /* mod here to change 103 to 03 */
+          broken_time.tm_mon + 1,    /* +1 here because tm_mon is 0-11 */
+          broken_time.tm_mday,
+          broken_time.tm_hour,
+          broken_time.tm_min,
+          broken_time.tm_sec);
 
   /* As suggested by the getlogin() manpage, use getpwuid(geteuid())
      to get the user controlling this process. don't use getlogin()
@@ -188,61 +187,59 @@ make_cmd_version_string (int argc, char** argv,  const char* id_string,
   */
   pw = getpwuid(geteuid());
   if ((pw != NULL) && (pw->pw_name != NULL))
-    strcpy (user, pw->pw_name);
+    strcpy(user, pw->pw_name);
   else
-    strcpy(user, "UNKNOWN") ;
+    strcpy(user, "UNKNOWN");
 
   /* Call uname to get the machine. */
-  result = uname (&kernel_info);
+  result = uname(&kernel_info);
   if (0 != result)
   {
-    //fprintf (stderr, "uname() returned %d\n", result);
-    strcpy (machine, "UNKNOWN");
-    strcpy (platform_version, "UNKNOWN");
+    // fprintf (stderr, "uname() returned %d\n", result);
+    strcpy(machine, "UNKNOWN");
+    strcpy(platform_version, "UNKNOWN");
   }
   else
   {
-    strcpy (machine, kernel_info.nodename);
-    strcpy (platform_version, kernel_info.release);
+    strcpy(machine, kernel_info.nodename);
+    strcpy(platform_version, kernel_info.release);
   }
 
   // TODO: build_timestamp really ought to be passed-in as a parameter
   // from the calling binary, to get a more accurate build time, but for
   // now, the build time of this version.c (libutils) is better than nothing
-  char build_timestamp[] = __DATE__" "__TIME__;
-  char argstr[CMD_LINE_LEN] ;
+  char build_timestamp[] = __DATE__ " "__TIME__;
+  char argstr[CMD_LINE_LEN];
 
-  if (strlen(arguments) > CMD_LINE_LEN/2)
-    strncpy(argstr, arguments, CMD_LINE_LEN/2) ;
+  if (strlen(arguments) > CMD_LINE_LEN / 2)
+    strncpy(argstr, arguments, CMD_LINE_LEN / 2);
   else
-    strcpy(argstr, arguments) ;
-
+    strcpy(argstr, arguments);
 
   /* Build the info string. */
-  sprintf (return_string, "%s %s "
-           "ProgramVersion: %s  TimeStamp: %s  "
-           "BuildTimeStamp: %s  CVS: %s  User: %s  "
-           "Machine: %s  Platform: %s  PlatformVersion: %s  "
-           "CompilerName: %s  CompilerVersion: %d  ",
-           program_name,
-           argstr,
-           version_string,
-           current_time_stamp,
-           build_timestamp,
-           id_string,
-           user,
-           machine,
-           PLATFORM,
-           platform_version,
-           COMPILER_NAME,
-           COMPILER_VERSION);
+  sprintf(return_string,
+          "%s %s "
+          "ProgramVersion: %s  TimeStamp: %s  "
+          "BuildTimeStamp: %s  CVS: %s  User: %s  "
+          "Machine: %s  Platform: %s  PlatformVersion: %s  "
+          "CompilerName: %s  CompilerVersion: %d  ",
+          program_name,
+          argstr,
+          version_string,
+          current_time_stamp,
+          build_timestamp,
+          id_string,
+          user,
+          machine,
+          PLATFORM,
+          platform_version,
+          COMPILER_NAME,
+          COMPILER_VERSION);
 
-  return(NO_ERROR) ;
+  return (NO_ERROR);
 }
 
-int
-handle_version_option (int argc, char** argv,
-                       const char* id_string, const char* version_string)
+int handle_version_option(int argc, char **argv, const char *id_string, const char *version_string)
 {
   int narg = 0;
   int nnarg = 0;
@@ -270,8 +267,7 @@ handle_version_option (int argc, char** argv,
   {
     option = argv[narg];
 
-    if (!strncmp(option,"--version",9) ||
-        !strncmp(option,"-version",8))
+    if (!strncmp(option, "--version", 9) || !strncmp(option, "-version", 8))
     {
 #if 0
       /* Since BIRN is now using --all-info to get version stuff,
@@ -290,27 +286,26 @@ handle_version_option (int argc, char** argv,
       /* Strip the "{Name: " and "}" from the id string. */
       if (strlen(version_string) > 7)
       {
-        strcpy (stripped_version_string, &(version_string[7]));
-        length = strlen (stripped_version_string);
+        strcpy(stripped_version_string, &(version_string[7]));
+        length = strlen(stripped_version_string);
         if (length > 2)
         {
-          stripped_version_string[length-2] = '\0';
+          stripped_version_string[length - 2] = '\0';
         }
       }
       else
       {
-        strcpy (stripped_version_string, version_string);
+        strcpy(stripped_version_string, version_string);
       }
 
-      if (strcmp(" $",stripped_version_string)==0)
+      if (strcmp(" $", stripped_version_string) == 0)
       {
         // on the dev build, where a sticky tag does not exist,
         // just a dollar sign is printed, which isnt very helpful,
         // so print something...
-        strcpy(stripped_version_string,
-               "dev build (use --all-info flag for full version info)");
+        strcpy(stripped_version_string, "dev build (use --all-info flag for full version info)");
       }
-      fprintf (stdout, "%s\n", stripped_version_string);
+      fprintf(stdout, "%s\n", stripped_version_string);
 
 #endif
       num_processed_args++;
@@ -318,18 +313,17 @@ handle_version_option (int argc, char** argv,
       /* Copy later args one step back. */
       for (nnarg = narg; nnarg < argc - num_processed_args; nnarg++)
       {
-        myarg=malloc(strlen(argv[nnarg+1])+1);
-        strcpy (myarg, argv[nnarg+1]);
-        argv[nnarg]=myarg;
+        myarg = malloc(strlen(argv[nnarg + 1]) + 1);
+        strcpy(myarg, argv[nnarg + 1]);
+        argv[nnarg] = myarg;
       }
     }
 
-    if (!strncmp(option,"--all-info",11) ||
-        !strncmp(option,"-all-info",10))
+    if (!strncmp(option, "--all-info", 11) || !strncmp(option, "-all-info", 10))
     {
 
       /* Copy argv[0] without the path into program_name. */
-      begin = strrchr (argv[0], (int)'/');
+      begin = strrchr(argv[0], (int)'/');
       if (NULL == begin)
       {
         begin = argv[0];
@@ -338,32 +332,35 @@ handle_version_option (int argc, char** argv,
       {
         begin = begin + 1;
       }
-      strcpy (program_name, begin);
+      strcpy(program_name, begin);
 
       /* Copy the arguments to the arguments string. */
-      strcpy (arguments, "");
+      strcpy(arguments, "");
       if (argc > 1)
       {
-        strcpy (arguments, argv[1]);
+        strcpy(arguments, argv[1]);
         for (nnarg = 2; nnarg < argc; nnarg++)
         {
-          // on Slackware Linux, libc does not support having the same 
+          // on Slackware Linux, libc does not support having the same
           // source and destination, like this:
-          //sprintf (arguments, "%s %s", arguments, argv[nnarg]);
+          // sprintf (arguments, "%s %s", arguments, argv[nnarg]);
           // the correct way to do this is:
-          strcat (arguments, " ");
-          strcat (arguments, argv[nnarg]);
+          strcat(arguments, " ");
+          strcat(arguments, argv[nnarg]);
         }
       }
 
       /* Find the time string. */
       seconds = time(NULL);
-      gmtime_r (&seconds, &broken_time);
-      sprintf (current_time_stamp, "20%02d/%02d/%02d-%02d:%02d:%02d-GMT",
-               broken_time.tm_year%100, /* mod here to change 103 to 03 */
-               broken_time.tm_mon+1, /* +1 here because tm_mon is 0-11 */
-               broken_time.tm_mday, broken_time.tm_hour,
-               broken_time.tm_min, broken_time.tm_sec);
+      gmtime_r(&seconds, &broken_time);
+      sprintf(current_time_stamp,
+              "20%02d/%02d/%02d-%02d:%02d:%02d-GMT",
+              broken_time.tm_year % 100, /* mod here to change 103 to 03 */
+              broken_time.tm_mon + 1,    /* +1 here because tm_mon is 0-11 */
+              broken_time.tm_mday,
+              broken_time.tm_hour,
+              broken_time.tm_min,
+              broken_time.tm_sec);
 
       /* As suggested by the getlogin() manpage, use getpwuid(geteuid())
          to get the user controlling this process. don't use getlogin()
@@ -373,56 +370,57 @@ handle_version_option (int argc, char** argv,
       */
       pw = getpwuid(geteuid());
       if ((pw != NULL) && (pw->pw_name != NULL))
-        strcpy (user, pw->pw_name);
+        strcpy(user, pw->pw_name);
       else
-        strcpy(user, "UNKNOWN") ;
+        strcpy(user, "UNKNOWN");
 
       /* Call uname to get the machine. */
-      result = uname (&kernel_info);
+      result = uname(&kernel_info);
       if (0 != result)
       {
-        //fprintf (stderr, "uname() returned %d\n", result);
-        strcpy (machine, "UNKNOWN");
-        strcpy (platform_version, "UNKNOWN");
+        // fprintf (stderr, "uname() returned %d\n", result);
+        strcpy(machine, "UNKNOWN");
+        strcpy(platform_version, "UNKNOWN");
       }
       else
       {
-        strcpy (machine, kernel_info.nodename);
-        strcpy (platform_version, kernel_info.release);
+        strcpy(machine, kernel_info.nodename);
+        strcpy(platform_version, kernel_info.release);
       }
 
       // TODO: build_timestamp really ought to be passed-in as a parameter
       // from the calling binary, to get a more accurate build time, but for
       // now, the build time of version.c (libutils) is better than nothing
-      char build_timestamp[] = __DATE__" "__TIME__;
+      char build_timestamp[] = __DATE__ " "__TIME__;
 
       /* Build the info string. */
-      fprintf (stdout, "ProgramName: %s  ProgramArguments: %s  "
-               "ProgramVersion: %s  TimeStamp: %s  "
-               "BuildTimeStamp: %s  CVS: %s  User: %s  "
-               "Machine: %s  Platform: %s  PlatformVersion: %s  "
-               "CompilerName: %s  CompilerVersion: %d \n",
-               program_name,
-               arguments,
-               version_string,
-               current_time_stamp,
-               build_timestamp,
-               id_string,
-               user,
-               machine,
-               PLATFORM,
-               platform_version,
-               COMPILER_NAME,
-               COMPILER_VERSION);
+      fprintf(stdout,
+              "ProgramName: %s  ProgramArguments: %s  "
+              "ProgramVersion: %s  TimeStamp: %s  "
+              "BuildTimeStamp: %s  CVS: %s  User: %s  "
+              "Machine: %s  Platform: %s  PlatformVersion: %s  "
+              "CompilerName: %s  CompilerVersion: %d \n",
+              program_name,
+              arguments,
+              version_string,
+              current_time_stamp,
+              build_timestamp,
+              id_string,
+              user,
+              machine,
+              PLATFORM,
+              platform_version,
+              COMPILER_NAME,
+              COMPILER_VERSION);
 
       num_processed_args++;
 
       /* Copy later args one step back. */
       for (nnarg = narg; nnarg < argc - num_processed_args; nnarg++)
       {
-        myarg=malloc(strlen(argv[nnarg+1])+1);
-        strcpy (myarg, argv[nnarg+1]);
-        argv[nnarg]=myarg;
+        myarg = malloc(strlen(argv[nnarg + 1]) + 1);
+        strcpy(myarg, argv[nnarg + 1]);
+        argv[nnarg] = myarg;
       }
     }
   }
@@ -440,16 +438,17 @@ char *argv2cmdline(int argc, char *argv[])
   char *cmdline;
 
   len = 0;
-  for (n=0; n<argc; n++) len += strlen(argv[n]);
+  for (n = 0; n < argc; n++)
+    len += strlen(argv[n]);
 
-  cmdline = (char *) calloc(sizeof(char),len+n+1);
-  for (n=0; n<argc; n++)
+  cmdline = (char *)calloc(sizeof(char), len + n + 1);
+  for (n = 0; n < argc; n++)
   {
-    strcat(cmdline,argv[n]);
-    strcat(cmdline," ");
+    strcat(cmdline, argv[n]);
+    strcat(cmdline, " ");
   }
 
-  return(cmdline);
+  return (cmdline);
 }
 
 /*----------------------------------------------------------
@@ -471,9 +470,9 @@ char *VERuser(void)
   if ((pw != NULL) && (pw->pw_name != NULL))
     user = strcpyalloc(pw->pw_name);
   else
-    user = strcpyalloc("UNKNOWN") ;
+    user = strcpyalloc("UNKNOWN");
 
-  return(user);
+  return (user);
 }
 
 /*----------------------------------------------------------
@@ -489,17 +488,21 @@ char *VERfileTimeStamp(char *fname)
   err = stat(fname, &buf);
   if (err)
   {
-    printf("ERROR: stating file %s\n",fname);
-    return(NULL);
+    printf("ERROR: stating file %s\n", fname);
+    return (NULL);
   }
   lt = localtime(&buf.st_mtime);
-  sprintf(tmpstr,"%04d/%02d/%02d %02d:%02d:%02d",
-          lt->tm_year+1900,lt->tm_mon+1, /* +1 here because tm_mon is 0-11 */
+  sprintf(tmpstr,
+          "%04d/%02d/%02d %02d:%02d:%02d",
+          lt->tm_year + 1900,
+          lt->tm_mon + 1, /* +1 here because tm_mon is 0-11 */
           lt->tm_mday,
-          lt->tm_hour,lt->tm_min,lt->tm_sec);
-  //free(lt); // Dies here
+          lt->tm_hour,
+          lt->tm_min,
+          lt->tm_sec);
+  // free(lt); // Dies here
   timestamp = strcpyalloc(tmpstr);
-  return(timestamp);
+  return (timestamp);
 }
 
 /*----------------------------------------------------------
@@ -512,13 +515,16 @@ char *VERcurTimeStamp(void)
   time_t seconds;
   struct tm broken_time;
   seconds = time(NULL);
-  gmtime_r (&seconds, &broken_time);
-  sprintf (tmpstr, "20%02d/%02d/%02d-%02d:%02d:%02d-GMT",
-           broken_time.tm_year%100, /* mod here to change 103 to 03 */
-           broken_time.tm_mon+1, /* +1 here because tm_mon is 0-11 */
-           broken_time.tm_mday, broken_time.tm_hour,
-           broken_time.tm_min, broken_time.tm_sec);
-  //Note: NOT Y3K compliant!
+  gmtime_r(&seconds, &broken_time);
+  sprintf(tmpstr,
+          "20%02d/%02d/%02d-%02d:%02d:%02d-GMT",
+          broken_time.tm_year % 100, /* mod here to change 103 to 03 */
+          broken_time.tm_mon + 1,    /* +1 here because tm_mon is 0-11 */
+          broken_time.tm_mday,
+          broken_time.tm_hour,
+          broken_time.tm_min,
+          broken_time.tm_sec);
+  // Note: NOT Y3K compliant!
   current_time_stamp = strcpyalloc(tmpstr);
-  return(current_time_stamp);
+  return (current_time_stamp);
 }

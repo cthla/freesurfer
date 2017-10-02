@@ -1,18 +1,15 @@
-//MARS Project (Thomas Yeo and Mert Sabuncu), MIT, CSAIL (c) 2006-2008
+// MARS Project (Thomas Yeo and Mert Sabuncu), MIT, CSAIL (c) 2006-2008
 
-#include <stdlib.h>
-#include <stdio.h>
 #include "math.h"
 #include "min_heap.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #define BIG_NO 100000000.0
 
 #define mexErrMsgTxt printf
 
-int index_2D_array(int row, int col, int num_rows)
-{
-    return( col*num_rows + row);   
-}
+int index_2D_array(int row, int col, int num_rows) { return (col * num_rows + row); }
 
 /*
   sv: int32 array of size N vertices, with the entries corresponding to your boundary marked as 1, and
@@ -31,75 +28,76 @@ NOTE: vertNbors is 1-based arrays are 1-based!!
 
 void MARS_DT_Boundary(int *sv, int numVerts, int maxNeighbors, int *vertNbors, double *costNbors, double *final_cost)
 {
-    MIN_HEAP *MH;
-    int *prev_neighbor, neighbor;
-    int i, result, heap_size;
-    double key; int id; void *data; double queryKey;
-    double cost;
-    
-    prev_neighbor = (int *) calloc(numVerts, sizeof(int)); /*Note that this is initialized to 0*/
-    MH = Min_HeapAllocate(numVerts, numVerts);
-    
-    for(i=0; i<numVerts; i++)
+  MIN_HEAP *MH;
+  int *prev_neighbor, neighbor;
+  int i, result, heap_size;
+  double key;
+  int id;
+  void *data;
+  double queryKey;
+  double cost;
+
+  prev_neighbor = (int *)calloc(numVerts, sizeof(int)); /*Note that this is initialized to 0*/
+  MH = Min_HeapAllocate(numVerts, numVerts);
+
+  for (i = 0; i < numVerts; i++)
+  {
+    result = Min_HeapInsert(MH, BIG_NO, NULL, (int)i); /*C indices*/
+    if (result == ERROR)
+      mexErrMsgTxt("MARS_DT_Boundary: insert outside range!!!");
+
+    // Initialize sources (boundaries) to be zeros!
+    if (sv[i] == 1)
+      result = Min_HeapEditKeyIndexID(MH, (int)i, 0.0); /*C indices*/
+
+    if (result == ERROR)
+      mexErrMsgTxt("MARS_DT_Boundary: edit outside range!!!");
+  }
+
+  while (1)
+  {
+    heap_size = Min_HeapGetCurrSize(MH);
+    if (heap_size == 0)
     {
-        result = Min_HeapInsert(MH, BIG_NO, NULL, (int) i); /*C indices*/
-        if(result == ERROR)
-            mexErrMsgTxt("MARS_DT_Boundary: insert outside range!!!"); 
-        
-        //Initialize sources (boundaries) to be zeros!
-        if(sv[i] == 1)
-            result = Min_HeapEditKeyIndexID(MH, (int) i, 0.0); /*C indices*/
-            
-        if(result == ERROR)
-            mexErrMsgTxt("MARS_DT_Boundary: edit outside range!!!");    
+      break; // Completed distance transform!
     }
-    
-    while(1)
+
+    result = Min_HeapExtract(MH, &key, &data, &id);
+    if (result == ERROR)
+      mexErrMsgTxt("MARS_DT_Boundary: extract fail!!!");
+
+    final_cost[id] = key;
+    for (i = 0; i < maxNeighbors; i++)
     {
-        heap_size = Min_HeapGetCurrSize(MH);
-        if(heap_size == 0)
+      neighbor = vertNbors[index_2D_array(i, id, maxNeighbors)]; /*id is already C-index*/
+      if (neighbor != 0)                                         /*real neighbor*/
+      {
+        if (neighbor > numVerts || neighbor < 1)
+          mexErrMsgTxt("MARS_DT_Boundary: neighbor outside range!!!");
+
+        neighbor--;                           /*convert to C index*/
+        if (Min_HeapIdIsInHeap(MH, neighbor)) /*Neighbor has not been taken out of heap yet*/
         {
-            break; //Completed distance transform!
+          result = Min_HeapQueryKeyIndexID(MH, neighbor, &queryKey);
+          if (result == ERROR)
+            mexErrMsgTxt("MARS_DT_Boundary: query fail!!!");
+
+          cost = costNbors[index_2D_array(i, id, maxNeighbors)]; /*note that id is already in C index*/
+          if (queryKey > key + cost)
+          {
+            result = Min_HeapEditKeyIndexID(MH, neighbor, key + cost);
+            if (result == ERROR)
+              mexErrMsgTxt("dijkstra_src2dest: edit fail!!!");
+            prev_neighbor[neighbor] = id; /*neighbor already at C index*/
+          }
         }
-        
-        result = Min_HeapExtract(MH, &key, &data, &id);
-        if(result == ERROR)
-            mexErrMsgTxt("MARS_DT_Boundary: extract fail!!!");
-        
-        final_cost[id] = key;
-        for(i = 0; i < maxNeighbors; i++)
-        {
-            neighbor = vertNbors[index_2D_array(i, id, maxNeighbors)]; /*id is already C-index*/
-            if(neighbor != 0) /*real neighbor*/
-            {
-                if(neighbor > numVerts || neighbor < 1)
-                        mexErrMsgTxt("MARS_DT_Boundary: neighbor outside range!!!");
-                
-                neighbor--; /*convert to C index*/
-                if(Min_HeapIdIsInHeap(MH, neighbor)) /*Neighbor has not been taken out of heap yet*/
-                {
-                    result = Min_HeapQueryKeyIndexID(MH, neighbor, &queryKey);
-                    if(result == ERROR)
-                          mexErrMsgTxt("MARS_DT_Boundary: query fail!!!");
-                    
-                    cost = costNbors[index_2D_array(i, id, maxNeighbors)]; /*note that id is already in C index*/
-                    if(queryKey > key + cost)
-                        {
-                            result = Min_HeapEditKeyIndexID(MH, neighbor, key+cost);
-                            if(result == ERROR)
-                                mexErrMsgTxt("dijkstra_src2dest: edit fail!!!");
-                            prev_neighbor[neighbor] = id; /*neighbor already at C index*/
-                        }                   
-                }               
-                
-            }
-        }       
+      }
     }
-    free(prev_neighbor);
-    Min_HeapFree(MH);
-    
-    return;
-    
+  }
+  free(prev_neighbor);
+  Min_HeapFree(MH);
+
+  return;
 }
 
 #if 0
@@ -131,7 +129,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    final_cost = (double *) mxGetPr(plhs[0]);
    
    MARS_DT_Boundary(sv, numVerts, maxNeighbors, vertNbors, costNbors, final_cost);    
-} 
-
+}
 
 #endif

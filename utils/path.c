@@ -5,7 +5,7 @@
  * REPLACE_WITH_LONG_DESCRIPTION_OR_REFERENCE
  */
 /*
- * Original Author: REPLACE_WITH_FULL_NAME_OF_CREATING_AUTHOR 
+ * Original Author: REPLACE_WITH_FULL_NAME_OF_CREATING_AUTHOR
  * CVS Revision Info:
  *    $Author: nicks $
  *    $Date: 2011/03/02 00:04:54 $
@@ -23,48 +23,46 @@
  *
  */
 
-
 #define _GNU_SOURCE
-#include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
-#include "path.h"
 #include "error.h"
 #include "getline.h"
+#include "path.h"
 
-int PathReadMany (char *fname, int *num_read, PATH ***returned_paths)
+int PathReadMany(char *fname, int *num_read, PATH ***returned_paths)
 {
-  FILE* fp;
+  FILE *fp;
   int num_scanf;
   int line_number;
   int path_pno;
   int num_points;
-  char* line = NULL;
+  char *line = NULL;
   size_t line_size = 1024;
   int version;
-  PATH* path = NULL;
-  PATH** paths = NULL;
+  PATH *path = NULL;
+  PATH **paths = NULL;
   int num_paths = 0;
   float x, y, z;
   int vno;
 
   /* Try opening the file. */
-  fp = fopen (fname, "r");
+  fp = fopen(fname, "r");
   if (NULL == fp)
   {
-    ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                               "Couldn't open %s\n",fname));
+    ErrorReturn(ERROR_BADPARM, (ERROR_BADPARM, "Couldn't open %s\n", fname));
   }
   line_number = 0;
 
-  line = (char*) malloc (line_size);
+  line = (char *)malloc(line_size);
 
   /* Look for keywords... */
   while (!feof(fp))
   {
-    getline (&line, &line_size, fp);
+    getline(&line, &line_size, fp);
     line_number++;
 
     /* Skip comments. */
@@ -76,127 +74,155 @@ int PathReadMany (char *fname, int *num_read, PATH ***returned_paths)
       continue;
 
     /* VERSION keyword */
-    if (0 == strncmp (line, "VERSION", 7))
+    if (0 == strncmp(line, "VERSION", 7))
     {
       /* See if we recognize this version number. */
-      num_scanf = sscanf (line, "VERSION %d", &version);
+      num_scanf = sscanf(line, "VERSION %d", &version);
       if (1 != num_scanf)
       {
-        fclose (fp);
-        free (line);
-        if (paths) free (paths);
-        if (path) free (path);
-        ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                                   "Error reading file %s\n"
-                                   "     line number %d\n"
-                                   "     couldn't read version number\n",
-                                   fname, line_number));
+        fclose(fp);
+        free(line);
+        if (paths)
+          free(paths);
+        if (path)
+          free(path);
+        ErrorReturn(ERROR_BADPARM,
+                    (ERROR_BADPARM,
+                     "Error reading file %s\n"
+                     "     line number %d\n"
+                     "     couldn't read version number\n",
+                     fname,
+                     line_number));
       }
       if (1 != version && 2 != version)
       {
-        fclose (fp);
-        free (line);
-        if (paths) free (paths);
-        if (path) free (path);
-        ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                                   "Error reading file %s\n"
-                                   "     wrong version %d\n",
-                                   fname, version));
+        fclose(fp);
+        free(line);
+        if (paths)
+          free(paths);
+        if (path)
+          free(path);
+        ErrorReturn(ERROR_BADPARM,
+                    (ERROR_BADPARM,
+                     "Error reading file %s\n"
+                     "     wrong version %d\n",
+                     fname,
+                     version));
       }
     }
-    else if (0 == strncmp (line, "BEGINPATH", 9))
+    else if (0 == strncmp(line, "BEGINPATH", 9))
     {
       /* Start a new path decsription. */
-      getline (&line, &line_size, fp);
+      getline(&line, &line_size, fp);
       line_number++;
-      if (0 != strncmp (line, "NUMVERTICES", 11) &&
-          0 != strncmp (line, "NUMPOINTS", 9))
+      if (0 != strncmp(line, "NUMVERTICES", 11) && 0 != strncmp(line, "NUMPOINTS", 9))
       {
-        fclose (fp);
-        free (line);
-        if (paths) free (paths);
-        if (path) free (path);
-        ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                                   "Error reading file %s\n"
-                                   "     line number %d\n"
-                                   "     expected NUMVERTICES\n",
-                                   fname, line_number));
+        fclose(fp);
+        free(line);
+        if (paths)
+          free(paths);
+        if (path)
+          free(path);
+        ErrorReturn(ERROR_BADPARM,
+                    (ERROR_BADPARM,
+                     "Error reading file %s\n"
+                     "     line number %d\n"
+                     "     expected NUMVERTICES\n",
+                     fname,
+                     line_number));
       }
 
       /* Scan for the number of vertices. */
-      num_scanf = sscanf (line, "NUMVERTICES %d", &num_points);
+      num_scanf = sscanf(line, "NUMVERTICES %d", &num_points);
       if (1 != num_scanf)
-        num_scanf = sscanf (line, "NUMPOINTS %d", &num_points);
+        num_scanf = sscanf(line, "NUMPOINTS %d", &num_points);
       if (1 != num_scanf || feof(fp))
       {
-        fclose (fp);
-        free (line);
-        if (paths) free (paths);
-        if (path) free (path);
-        ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                                   "Error reading file %s\n"
-                                   "     line number %d\n"
-                                   "     couldn't read NUMPOINTS number\n",
-                                   fname, line_number));
+        fclose(fp);
+        free(line);
+        if (paths)
+          free(paths);
+        if (path)
+          free(path);
+        ErrorReturn(ERROR_BADPARM,
+                    (ERROR_BADPARM,
+                     "Error reading file %s\n"
+                     "     line number %d\n"
+                     "     couldn't read NUMPOINTS number\n",
+                     fname,
+                     line_number));
       }
 
       /* Allocate our path object. */
-      path = PathAlloc (num_points, fname);
+      path = PathAlloc(num_points, fname);
       if (NULL == path)
       {
-        fclose (fp);
-        free (line);
-        if (paths) free (paths);
-        if (path) free (path);
-        ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                                   "Error creating path of\n"
-                                   "     size %d\n"
-                                   "     line number %d\n"
-                                   "     couldn't read NUMPOINTS number\n",
-                                   num_points, fname, line_number));
+        fclose(fp);
+        free(line);
+        if (paths)
+          free(paths);
+        if (path)
+          free(path);
+        ErrorReturn(ERROR_BADPARM,
+                    (ERROR_BADPARM,
+                     "Error creating path of\n"
+                     "     size %d\n"
+                     "     line number %d\n"
+                     "     couldn't read NUMPOINTS number\n",
+                     num_points,
+                     fname,
+                     line_number));
       }
 
       /* Read in a line of coordinates for every point we
          have. */
       for (path_pno = 0; path_pno < num_points; path_pno++)
       {
-        getline (&line, &line_size, fp);
+        getline(&line, &line_size, fp);
         line_number++;
 
         switch (version)
         {
         case 1:
 
-          num_scanf = sscanf (line, "%f %f %f", &x, &y, &z);
+          num_scanf = sscanf(line, "%f %f %f", &x, &y, &z);
           if (3 != num_scanf || feof(fp))
           {
-            fclose (fp);
-            free (line);
-            free (path);
-            if (paths) free (paths);
-            if (path) free (path);
-            ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                                       "Error reading file %s\n"
-                                       "     line number %d\n"
-                                       "     couldn't read three floats\n",
-                                       fname, line_number));
+            fclose(fp);
+            free(line);
+            free(path);
+            if (paths)
+              free(paths);
+            if (path)
+              free(path);
+            ErrorReturn(ERROR_BADPARM,
+                        (ERROR_BADPARM,
+                         "Error reading file %s\n"
+                         "     line number %d\n"
+                         "     couldn't read three floats\n",
+                         fname,
+                         line_number));
           }
           vno = -1;
           break;
         case 2:
-          num_scanf = sscanf (line, "%f %f %f %d", &x, &y, &z, &vno);
+          num_scanf = sscanf(line, "%f %f %f %d", &x, &y, &z, &vno);
           if (4 != num_scanf || feof(fp))
           {
-            fclose (fp);
-            free (line);
-            free (path);
-            if (paths) free (paths);
-            if (path) free (path);
-            ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                                       "Error reading file %s\n"
-                                       "     line number %d\n"
-                                       "     couldn't read three floats and an int\n",
-                                       fname, line_number));
+            fclose(fp);
+            free(line);
+            free(path);
+            if (paths)
+              free(paths);
+            if (path)
+              free(path);
+            ErrorReturn(ERROR_BADPARM,
+                        (ERROR_BADPARM,
+                         "Error reading file %s\n"
+                         "     line number %d\n"
+                         "     couldn't read three floats and an int\n",
+                         fname,
+                         line_number));
           }
           break;
         }
@@ -209,29 +235,33 @@ int PathReadMany (char *fname, int *num_read, PATH ***returned_paths)
       }
 
       /* Make sure we got the ENDPATH keyword. */
-      getline (&line, &line_size, fp);
+      getline(&line, &line_size, fp);
       line_number++;
-      if (0 != strncmp (line, "ENDPATH", 7))
+      if (0 != strncmp(line, "ENDPATH", 7))
       {
-        fclose (fp);
-        free (line);
-        if (paths) free (paths);
-        if (path) free (path);
-        ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                                   "Error reading file %s\n"
-                                   "     line number %d\n"
-                                   "     expected ENDPATH\n",
-                                   fname, line_number));
+        fclose(fp);
+        free(line);
+        if (paths)
+          free(paths);
+        if (path)
+          free(path);
+        ErrorReturn(ERROR_BADPARM,
+                    (ERROR_BADPARM,
+                     "Error reading file %s\n"
+                     "     line number %d\n"
+                     "     expected ENDPATH\n",
+                     fname,
+                     line_number));
       }
 
       /* Add the path to our array. */
       if (NULL == paths)
       {
-        paths = (PATH**) calloc (num_paths+1, sizeof(PATH*));
+        paths = (PATH **)calloc(num_paths + 1, sizeof(PATH *));
       }
       else
       {
-        paths = (PATH**) realloc (paths, (num_paths+1) * sizeof(PATH*));
+        paths = (PATH **)realloc(paths, (num_paths + 1) * sizeof(PATH *));
       }
       paths[num_paths] = path;
       num_paths++;
@@ -240,16 +270,18 @@ int PathReadMany (char *fname, int *num_read, PATH ***returned_paths)
     else
     {
       /* Didn't get a keyword we're looking for. */
-      ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                                 "Error reading file %s\n"
-                                 "     line number %d\n"
-                                 "     no expected keyword found\n",
-                                 fname, line_number));
+      ErrorReturn(ERROR_BADPARM,
+                  (ERROR_BADPARM,
+                   "Error reading file %s\n"
+                   "     line number %d\n"
+                   "     no expected keyword found\n",
+                   fname,
+                   line_number));
     }
   }
 
-  free (line);
-  fclose (fp);
+  free(line);
+  fclose(fp);
 
   *num_read = num_paths;
   *returned_paths = paths;
@@ -257,65 +289,64 @@ int PathReadMany (char *fname, int *num_read, PATH ***returned_paths)
   return (ERROR_NONE);
 }
 
-
-int PathWriteMany (char *fname, int num_paths, PATH **paths)
+int PathWriteMany(char *fname, int num_paths, PATH **paths)
 {
-  FILE* fp;
+  FILE *fp;
   int path;
   int path_pno;
 
   /* Try to open the file. */
-  fp = fopen (fname, "w");
+  fp = fopen(fname, "w");
   if (NULL == fp)
   {
-    ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,
-                               "Couldn't open %s\n",fname));
+    ErrorReturn(ERROR_BADPARM, (ERROR_BADPARM, "Couldn't open %s\n", fname));
   }
 
   /* Write some header info. */
-  fprintf (fp, "# Path file\n");
+  fprintf(fp, "# Path file\n");
 
   /* Version keyword. */
-  fprintf (fp, "VERSION 2\n");
+  fprintf(fp, "VERSION 2\n");
 
   /* For each path... */
   for (path = 0; path < num_paths; path++)
   {
     /* Add BEGINPATH and NUMVERTICES keywords and info. */
-    fprintf (fp, "BEGINPATH\n");
-    fprintf (fp, "NUMPOINTS %d\n", paths[path]->n_points);
+    fprintf(fp, "BEGINPATH\n");
+    fprintf(fp, "NUMPOINTS %d\n", paths[path]->n_points);
 
     /* For each vertex, write a line with the coordinate on it. */
     for (path_pno = 0; path_pno < paths[path]->n_points; path_pno++)
     {
-      fprintf (fp, "%f %f %f %d\n",
-               paths[path]->points[path_pno].x,
-               paths[path]->points[path_pno].y,
-               paths[path]->points[path_pno].z,
-               paths[path]->points[path_pno].vno);
+      fprintf(fp,
+              "%f %f %f %d\n",
+              paths[path]->points[path_pno].x,
+              paths[path]->points[path_pno].y,
+              paths[path]->points[path_pno].z,
+              paths[path]->points[path_pno].vno);
     }
 
     /* ENDPATH keyword. */
-    fprintf (fp, "ENDPATH\n");
+    fprintf(fp, "ENDPATH\n");
   }
 
-  fclose (fp);
+  fclose(fp);
 
   return (ERROR_NONE);
 }
 
-PATH* PathAlloc (int n_points, char* name)
+PATH *PathAlloc(int n_points, char *name)
 {
-  PATH* path;
+  PATH *path;
 
   if (n_points < 0)
     return NULL;
 
   /* Allocate path struct. */
-  path = (PATH*) malloc (sizeof(PATH));
+  path = (PATH *)malloc(sizeof(PATH));
   if (NULL == path)
   {
-    printf ("ERROR: Couldn't allocate path.\n");
+    printf("ERROR: Couldn't allocate path.\n");
     return NULL;
   }
 
@@ -323,80 +354,80 @@ PATH* PathAlloc (int n_points, char* name)
   path->n_points = n_points;
 
   /* Copy in a name. */
-  if (NULL != name )
-    strncpy (path->name, name, 100);
+  if (NULL != name)
+    strncpy(path->name, name, 100);
   else
-    strcpy (path->name, "");
+    strcpy(path->name, "");
 
   /* Allocate the point storage. */
-  path->points = (PATH_POINT*) calloc (n_points, sizeof(PATH_POINT));
+  path->points = (PATH_POINT *)calloc(n_points, sizeof(PATH_POINT));
   if (NULL == path)
   {
-    printf ("ERROR: Couldn't allocate %d points in path.\n", n_points);
-    free (path);
+    printf("ERROR: Couldn't allocate %d points in path.\n", n_points);
+    free(path);
     return NULL;
   }
 
   return path;
 }
 
-int PathFree (PATH** path)
+int PathFree(PATH **path)
 {
   if (NULL == path || NULL == (*path))
-    ErrorReturn(ERROR_BADPARM,(ERROR_BADPARM,"No path supplied."));
+    ErrorReturn(ERROR_BADPARM, (ERROR_BADPARM, "No path supplied."));
 
   /* Free the points array, then the path struct. */
-  free ((*path)->points);
-  free ((*path));
+  free((*path)->points);
+  free((*path));
   *path = NULL;
 
   return (ERROR_NONE);
 }
 
-int PathIsPathFile (char* fname)
+int PathIsPathFile(char *fname)
 {
 
-  FILE*  fp           = NULL;
-  int    is_path_file = 0;
+  FILE *fp = NULL;
+  int is_path_file = 0;
 
   /* Open the file. */
-  fp = fopen (fname, "r");
+  fp = fopen(fname, "r");
   if (NULL == fp)
     return 0;
 
   /* Run the stream version. */
-  is_path_file = PathIsPathFileStream (fp);
+  is_path_file = PathIsPathFileStream(fp);
 
   /* Close the file. */
-  fclose (fp);
+  fclose(fp);
 
   return is_path_file;
 }
 
-int PathIsPathFileStream (FILE* fp)
+int PathIsPathFileStream(FILE *fp)
 {
 
-  char*  line       = NULL;
-  size_t size       = 1024;
-  char*  needle     = NULL;
-  int    found      = 0;
+  char *line = NULL;
+  size_t size = 1024;
+  char *needle = NULL;
+  int found = 0;
 
   found = 0;
 
   /* Line buffer. */
-  line = (char*) malloc (size);
+  line = (char *)malloc(size);
 
   while (!feof(fp) && !found)
   {
     /* Get a line. */
-    getline (&line, &size, fp);
+    getline(&line, &size, fp);
 
     /* If it's a comment line. */
     if (line[0] == '#')
     {
       /* Look for the Path string. It's a path file if so. */
-      needle = strstr( line, "Path" );
-      if ( NULL != needle )
+      needle = strstr(line, "Path");
+      if (NULL != needle)
       {
         found = 1;
         break;
@@ -404,28 +435,26 @@ int PathIsPathFileStream (FILE* fp)
     }
   }
 
-  free (line);
+  free(line);
 
   return found;
 }
 
-int PathConvertToLabel (PATH* path, LABEL** label)
+int PathConvertToLabel(PATH *path, LABEL **label)
 {
-  LABEL* new_label = NULL;
-  int    pno       = 0;
+  LABEL *new_label = NULL;
+  int pno = 0;
 
   if (NULL == path)
-    ErrorReturn( ERROR_BADPARM, (ERROR_BADPARM, "Path pointer was null"));
+    ErrorReturn(ERROR_BADPARM, (ERROR_BADPARM, "Path pointer was null"));
 
   if (NULL == label)
-    ErrorReturn( ERROR_BADPARM, (ERROR_BADPARM, "Label pointer not null"));
+    ErrorReturn(ERROR_BADPARM, (ERROR_BADPARM, "Label pointer not null"));
 
   /* Make a label the size of first path. */
-  new_label = LabelAlloc (path->n_points, NULL, NULL);
+  new_label = LabelAlloc(path->n_points, NULL, NULL);
   if (NULL == new_label)
-    ErrorReturn (ERROR_NO_MEMORY,
-                 (ERROR_NO_MEMORY, "Couldn't allocate label of %d points",
-                  path->n_points));
+    ErrorReturn(ERROR_NO_MEMORY, (ERROR_NO_MEMORY, "Couldn't allocate label of %d points", path->n_points));
 
   new_label->n_points = path->n_points;
 
@@ -444,26 +473,24 @@ int PathConvertToLabel (PATH* path, LABEL** label)
   return (ERROR_NONE);
 }
 
-int PathCreateFromLabel (LABEL* label, PATH** path)
+int PathCreateFromLabel(LABEL *label, PATH **path)
 {
-  PATH* new_path = NULL;
-  int   pno      = 0;
+  PATH *new_path = NULL;
+  int pno = 0;
 
   if (NULL == label)
-    ErrorReturn( ERROR_BADPARM, (ERROR_BADPARM, "Label pointer was null"));
+    ErrorReturn(ERROR_BADPARM, (ERROR_BADPARM, "Label pointer was null"));
 
   if (NULL == path)
-    ErrorReturn( ERROR_BADPARM, (ERROR_BADPARM, "Path pointer was null"));
+    ErrorReturn(ERROR_BADPARM, (ERROR_BADPARM, "Path pointer was null"));
 
   /* Make the path. */
-  new_path = PathAlloc (label->n_points, NULL);
+  new_path = PathAlloc(label->n_points, NULL);
   if (NULL == path)
-    ErrorReturn (ERROR_NO_MEMORY,
-                 (ERROR_NO_MEMORY, "Couldn't allocate path of %d points",
-                  label->n_points));
+    ErrorReturn(ERROR_NO_MEMORY, (ERROR_NO_MEMORY, "Couldn't allocate path of %d points", label->n_points));
 
   /* Read points into the path from the label. */
-  for (pno = 0; pno < label->n_points; pno++ )
+  for (pno = 0; pno < label->n_points; pno++)
   {
     new_path->points[pno].x = label->lv[pno].x;
     new_path->points[pno].y = label->lv[pno].y;

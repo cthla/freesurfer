@@ -5,7 +5,7 @@
  * REPLACE_WITH_LONG_DESCRIPTION_OR_REFERENCE
  */
 /*
- * Original Author: REPLACE_WITH_FULL_NAME_OF_CREATING_AUTHOR 
+ * Original Author: REPLACE_WITH_FULL_NAME_OF_CREATING_AUTHOR
  * CVS Revision Info:
  *    $Author: nicks $
  *    $Date: 2011/03/02 00:04:55 $
@@ -23,7 +23,6 @@
  *
  */
 
-
 /*
    @(#)thread.c 1.3
    4/7/94
@@ -40,54 +39,51 @@
 
 ------------------------------------------------------------------------*/
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
-#include "thread.h"
-#include "mthread.h"
-#include "queue.h"
 #include "error.h"
 #include "mailbox.h"
+#include "mthread.h"
+#include "queue.h"
+#include "thread.h"
 
 /*------------------------------------------------------------------------
                             CONSTANTS
 ------------------------------------------------------------------------*/
 
-#define QSIZE   20
+#define QSIZE 20
 
 /*------------------------------------------------------------------------
                             STRUCTURES
 ------------------------------------------------------------------------*/
 
-typedef struct
-{
-  char  *name ;
-  int   iMtid ;          /* machine specific id of this thread */
-  int   iSusSignal ;
-  QUEUE *inQ ;          /* input queue for thread */
-}
-THREAD ;
+typedef struct {
+  char *name;
+  int iMtid; /* machine specific id of this thread */
+  int iSusSignal;
+  QUEUE *inQ; /* input queue for thread */
+} THREAD;
 
 /*------------------------------------------------------------------------
                             GLOBAL DATA
 ------------------------------------------------------------------------*/
 
-int iDone = 0 ;   /* will cause shutdown when set to 1 */
+int iDone = 0; /* will cause shutdown when set to 1 */
 
 /*------------------------------------------------------------------------
                             STATIC DATA
 ------------------------------------------------------------------------*/
 
-static int      iMaxThreads = 0 ;   /* max allowable # of threads */
-static int      iNthreads = 0 ;     /* number of current threads */
-static THREAD   *pthrTable ;
-static int      iMachineId = 0 ;
+static int iMaxThreads = 0; /* max allowable # of threads */
+static int iNthreads = 0;   /* number of current threads */
+static THREAD *pthrTable;
+static int iMachineId = 0;
 
 /*------------------------------------------------------------------------
                               FUNCTIONS
 ------------------------------------------------------------------------*/
-
 
 /*------------------------------------------------------------------------
        Parameters:
@@ -100,30 +96,27 @@ static int      iMachineId = 0 ;
             0 on success, < 0 otherwise.
 
 ------------------------------------------------------------------------*/
-int
-ThreadInit(int mid, int iMaxThr, int stacksize, int npriorities)
+int ThreadInit(int mid, int iMaxThr, int stacksize, int npriorities)
 {
-  THREAD *thread ;
-  int    iError ;
+  THREAD *thread;
+  int iError;
 
-  iMaxThreads = iMaxThr + 1 ;
-  pthrTable = (THREAD *)calloc(iMaxThreads, sizeof(THREAD)) ;
+  iMaxThreads = iMaxThr + 1;
+  pthrTable = (THREAD *)calloc(iMaxThreads, sizeof(THREAD));
   if (!pthrTable)
-    return(ErrorSet(ERROR_NO_MEMORY,
-                    "ThreadInit(%d, %d) - could not allocate table\n",
-                    mid, iMaxThr)) ;
+    return (ErrorSet(ERROR_NO_MEMORY, "ThreadInit(%d, %d) - could not allocate table\n", mid, iMaxThr));
 
-  iMachineId = mid ;
-  iError = MachThreadInit(iMaxThr, stacksize, npriorities) ;
+  iMachineId = mid;
+  iError = MachThreadInit(iMaxThr, stacksize, npriorities);
   if (iError < 0)
-    return(iError) ;
+    return (iError);
 
   /* thread #0 is reserved for main */
-  thread = &pthrTable[iNthreads++] ;
-  thread->name = "main" ;
-  thread->iMtid = MachThreadGetTid() ;
-  thread->inQ = Qalloc(QSIZE) ;
-  return(0) ;
+  thread = &pthrTable[iNthreads++];
+  thread->name = "main";
+  thread->iMtid = MachThreadGetTid();
+  thread->inQ = Qalloc(QSIZE);
+  return (0);
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -135,21 +128,19 @@ ThreadInit(int mid, int iMaxThr, int stacksize, int npriorities)
             0 on success, < 0 otherwise.
 
 ------------------------------------------------------------------------*/
-int
-ThreadEnd(int iTid)
+int ThreadEnd(int iTid)
 {
-  int  iMtid ;
+  int iMtid;
 
   if (iTid >= iNthreads)
-    return(ErrorSet(ERROR_NO_MEMORY,
-                    "ThreadEnd(%d) - invalid thread #\n", iTid)) ;
+    return (ErrorSet(ERROR_NO_MEMORY, "ThreadEnd(%d) - invalid thread #\n", iTid));
 
   if (iTid == TID_SELF)
-    iTid = ThreadGetTid() ;
+    iTid = ThreadGetTid();
 
-  iMtid = pthrTable[iTid].iMtid ;
+  iMtid = pthrTable[iTid].iMtid;
 
-  return(MachThreadKill(iMtid)) ;
+  return (MachThreadKill(iMtid));
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -163,37 +154,33 @@ ThreadEnd(int iTid)
             0 on success, < 0 otherwise.
 
 ------------------------------------------------------------------------*/
-int
-ThreadStart(char *name, void (*func)(int iTid, void *parm), void *parm,
-            int priority)
+int ThreadStart(char *name, void (*func)(int iTid, void *parm), void *parm, int priority)
 {
-  int     iMtid, iTid ;
-  THREAD  *pthr ;
+  int iMtid, iTid;
+  THREAD *pthr;
 
   if (iNthreads >= iMaxThreads)
-    return(ErrorSet(ERROR_NO_MEMORY,
-                    "ThreadStart() - no more threads available\n")) ;
+    return (ErrorSet(ERROR_NO_MEMORY, "ThreadStart() - no more threads available\n"));
 
-  iTid = iNthreads++ ;
-  pthr = &pthrTable[iTid] ;
-  pthr->name = name ;
-  pthr->inQ = Qalloc(QSIZE) ;
+  iTid = iNthreads++;
+  pthr = &pthrTable[iTid];
+  pthr->name = name;
+  pthr->inQ = Qalloc(QSIZE);
   if (!pthr->inQ)
-    return(ErrorSet(ERROR_NO_MEMORY,
-                    "ThreadStart(%s): could not allocate Q\n", name)) ;
+    return (ErrorSet(ERROR_NO_MEMORY, "ThreadStart(%s): could not allocate Q\n", name));
 
-  iMtid = MachThreadStart(name, func, iTid, parm, priority) ;
+  iMtid = MachThreadStart(name, func, iTid, parm, priority);
   if (iMtid < 0)
   {
-    Qfree(pthr->inQ) ;
-    iNthreads-- ;
-    return(iMtid) ;
+    Qfree(pthr->inQ);
+    iNthreads--;
+    return (iMtid);
   }
-  pthr->iMtid = iMtid ;
+  pthr->iMtid = iMtid;
 
-  ThreadResume(iTid, SIG_ALL) ;
+  ThreadResume(iTid, SIG_ALL);
 
-  return(iTid) ;
+  return (iTid);
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -211,24 +198,22 @@ ThreadStart(char *name, void (*func)(int iTid, void *parm), void *parm,
             0 on success, < 0 otherwise.
 
 ------------------------------------------------------------------------*/
-int
-ThreadSuspend(int iTid, int iSignal)
+int ThreadSuspend(int iTid, int iSignal)
 {
-  int     iMtid ;
-  THREAD  *pthr ;
+  int iMtid;
+  THREAD *pthr;
 
   if (iTid >= iNthreads)
-    return(ErrorSet(ERROR_NO_MEMORY,
-                    "ThreadSuspend(%d) - invalid thread\n", iTid)) ;
+    return (ErrorSet(ERROR_NO_MEMORY, "ThreadSuspend(%d) - invalid thread\n", iTid));
 
   if (iTid == TID_SELF)
-    iTid = ThreadGetTid() ;
+    iTid = ThreadGetTid();
 
-  pthr = &pthrTable[iTid] ;
-  pthr->iSusSignal |= iSignal ;
-  iMtid = pthr->iMtid ;
+  pthr = &pthrTable[iTid];
+  pthr->iSusSignal |= iSignal;
+  iMtid = pthr->iMtid;
 
-  return(MachThreadSuspend(iMtid)) ;
+  return (MachThreadSuspend(iMtid));
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -241,33 +226,31 @@ ThreadSuspend(int iTid, int iSignal)
             0 on success, < 0 otherwise.
 
 ------------------------------------------------------------------------*/
-int
-ThreadResume(int iTid, int iSignal)
+int ThreadResume(int iTid, int iSignal)
 {
-  THREAD  *pthr ;
-  int     iMtid ;
+  THREAD *pthr;
+  int iMtid;
 
   if (iTid >= iNthreads)
-    return(ErrorSet(ERROR_NO_MEMORY,
-                    "ThreadResume(%d) - invalid thread\n", iTid)) ;
+    return (ErrorSet(ERROR_NO_MEMORY, "ThreadResume(%d) - invalid thread\n", iTid));
 
   if (iTid == TID_ALL)
   {
-    for (iTid = 0 ; iTid < iNthreads ; iTid++)
-      ThreadResume(iTid, iSignal) ;
+    for (iTid = 0; iTid < iNthreads; iTid++)
+      ThreadResume(iTid, iSignal);
 
-    return(0) ;
+    return (0);
   }
   else
   {
     if (iTid == TID_SELF)
-      iTid = ThreadGetTid() ;
+      iTid = ThreadGetTid();
 
-    pthr = &pthrTable[iTid] ;
-    iMtid = pthr->iMtid ;
-    pthr->iSusSignal = 0 ;
+    pthr = &pthrTable[iTid];
+    iMtid = pthr->iMtid;
+    pthr->iSusSignal = 0;
 
-    return(MachThreadResume(iMtid)) ;
+    return (MachThreadResume(iMtid));
   }
 }
 /*------------------------------------------------------------------------
@@ -282,21 +265,19 @@ ThreadResume(int iTid, int iSignal)
             0 on success, < 0 otherwise.
 
 ------------------------------------------------------------------------*/
-int
-ThreadSleep(int iTid, long usec)
+int ThreadSleep(int iTid, long usec)
 {
-  int  iMtid ;
+  int iMtid;
 
   if (iTid >= iNthreads)
-    return(ErrorSet(ERROR_NO_MEMORY,
-                    "ThreadSleep(%d) - invalid thread #\n", iTid)) ;
+    return (ErrorSet(ERROR_NO_MEMORY, "ThreadSleep(%d) - invalid thread #\n", iTid));
 
   if (iTid == TID_SELF)
-    iMtid = TID_SELF ;
+    iMtid = TID_SELF;
   else
-    iMtid = pthrTable[iTid].iMtid ;
+    iMtid = pthrTable[iTid].iMtid;
 
-  return(MachThreadSleep(iMtid, usec)) ;
+  return (MachThreadSleep(iMtid, usec));
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -310,26 +291,24 @@ ThreadSleep(int iTid, long usec)
           1 if the thread was woken up, 0 if not.
 
 ------------------------------------------------------------------------*/
-int
-ThreadSignal(int iTid, int iSignal)
+int ThreadSignal(int iTid, int iSignal)
 {
-  THREAD  *pthr ;
+  THREAD *pthr;
 
   if (iTid >= iNthreads)
-    return(ErrorSet(ERROR_NO_MEMORY,
-                    "ThreadSignal(%d) - invalid thread #\n", iTid)) ;
+    return (ErrorSet(ERROR_NO_MEMORY, "ThreadSignal(%d) - invalid thread #\n", iTid));
 
   if (iTid == TID_SELF)
-    iTid = ThreadGetTid() ;
+    iTid = ThreadGetTid();
 
-  pthr = &pthrTable[iTid] ;
+  pthr = &pthrTable[iTid];
   if (pthr->iSusSignal & iSignal)
   {
-    ThreadResume(iTid, iSignal) ;
-    return(1) ;
+    ThreadResume(iTid, iSignal);
+    return (1);
   }
   else
-    return(0) ;
+    return (0);
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -343,16 +322,15 @@ ThreadSignal(int iTid, int iSignal)
             0 on success, < 0 otherwise.
 
 ------------------------------------------------------------------------*/
-int
-ThreadYield(void)
+int ThreadYield(void)
 {
-  int  iMtid, iTid ;
+  int iMtid, iTid;
 
   /* ThreadCheckMailbox() ;*/
-  iTid = ThreadGetTid() ;
-  iMtid = pthrTable[iTid].iMtid ;
+  iTid = ThreadGetTid();
+  iMtid = pthrTable[iTid].iMtid;
 
-  return(MachThreadYield(iMtid)) ;
+  return (MachThreadYield(iMtid));
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -368,30 +346,28 @@ ThreadYield(void)
             0 on success, < 0 otherwise.
 
 ------------------------------------------------------------------------*/
-int
-ThreadEnqueue(int iTid, void *msg)
+int ThreadEnqueue(int iTid, void *msg)
 {
-  THREAD *thr ;
+  THREAD *thr;
 
   if (iTid >= iNthreads)
-    return(ErrorSet(ERROR_NO_MEMORY,
-                    "ThreadEnqueue(%d) - invalid thread #\n", iTid)) ;
+    return (ErrorSet(ERROR_NO_MEMORY, "ThreadEnqueue(%d) - invalid thread #\n", iTid));
 
   if (iTid == TID_ALL)
   {
-    for (iTid = 0 ; iTid < iNthreads ; iTid++)
-      ThreadEnqueue(iTid, msg) ;
+    for (iTid = 0; iTid < iNthreads; iTid++)
+      ThreadEnqueue(iTid, msg);
   }
   else
   {
-    thr = &pthrTable[iTid] ;
+    thr = &pthrTable[iTid];
     if (msg)
-      Qput(thr->inQ, msg) ;
+      Qput(thr->inQ, msg);
     if (thr->iSusSignal & SIG_Q_PENDING)
-      ThreadResume(iTid, SIG_Q_PENDING) ;
+      ThreadResume(iTid, SIG_Q_PENDING);
   }
 
-  return(0) ;
+  return (0);
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -406,29 +382,27 @@ ThreadEnqueue(int iTid, void *msg)
                head of the Q otherwise.
 
 ------------------------------------------------------------------------*/
-void *
-ThreadDequeue(int mode)
+void *ThreadDequeue(int mode)
 {
-  int    iTid ;
-  THREAD *thr ;
+  int iTid;
+  THREAD *thr;
 
-  iTid = ThreadGetTid() ;
+  iTid = ThreadGetTid();
 
   if ((iTid >= iNthreads) || (iTid < 0))
   {
-    ErrorSet(ERROR_NO_MEMORY,"ThreadDequeue(%d) - invalid thread # (max %d)\n",
-             iTid, iNthreads) ;
-    return(NULL) ;
+    ErrorSet(ERROR_NO_MEMORY, "ThreadDequeue(%d) - invalid thread # (max %d)\n", iTid, iNthreads);
+    return (NULL);
   }
 
-  thr = &pthrTable[iTid] ;
+  thr = &pthrTable[iTid];
 
   if ((mode == Q_WAIT_FOR_DATA) && (Qempty(thr->inQ)))
   {
-    ThreadSuspend(iTid, SIG_Q_PENDING) ;
+    ThreadSuspend(iTid, SIG_Q_PENDING);
   }
 
-  return(Qget(thr->inQ, mode)) ;
+  return (Qget(thr->inQ, mode));
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -440,18 +414,17 @@ ThreadDequeue(int mode)
             the TID on success (> 0), < 0 on error.
 
 ------------------------------------------------------------------------*/
-int
-ThreadGetTid(void)
+int ThreadGetTid(void)
 {
-  int  iMtid, iTid ;
+  int iMtid, iTid;
 
-  iMtid = MachThreadGetTid() ;
+  iMtid = MachThreadGetTid();
 
-  for (iTid = 0 ; iTid  < iNthreads ; iTid++)
+  for (iTid = 0; iTid < iNthreads; iTid++)
     if (pthrTable[iTid].iMtid == iMtid)
-      return(iTid) ;
+      return (iTid);
 
-  return(TID_NONE) ;
+  return (TID_NONE);
 }
 /*------------------------------------------------------------------------
        Parameters:
@@ -462,11 +435,7 @@ ThreadGetTid(void)
     Return Values:
 
 ------------------------------------------------------------------------*/
-void
-ThreadExit(int status)
-{
-  MachThreadExit(status) ;
-}
+void ThreadExit(int status) { MachThreadExit(status); }
 /*------------------------------------------------------------------------
        Parameters:
 
@@ -477,11 +446,7 @@ ThreadExit(int status)
            the ID of the local machine.
 
 ------------------------------------------------------------------------*/
-int
-ThreadGetMid(void)
-{
-  return(iMachineId) ;
-}
+int ThreadGetMid(void) { return (iMachineId); }
 /*------------------------------------------------------------------------
        Parameters:
 
@@ -493,19 +458,18 @@ ThreadGetMid(void)
          the number of elements processed.
 
 ------------------------------------------------------------------------*/
-int
-ThreadCheckMailbox(void)
+int ThreadCheckMailbox(void)
 {
-  MSG  *msg ;
-  int  iNcalls = 0 ;
+  MSG *msg;
+  int iNcalls = 0;
 
-  msg = ThreadDequeue(Q_DONT_WAIT) ;
+  msg = ThreadDequeue(Q_DONT_WAIT);
   while (msg)
   {
-    iNcalls++ ;
+    iNcalls++;
     /*    MBinvoke(msg) ;*/
-    msg = ThreadDequeue(Q_DONT_WAIT) ;
+    msg = ThreadDequeue(Q_DONT_WAIT);
   }
 
-  return(iNcalls) ;
+  return (iNcalls);
 }
